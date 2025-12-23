@@ -451,7 +451,7 @@ export const Landing: React.FC = () => {
               <span className="text-lg font-bold">Momentum</span>
             </div>
             <div className="text-sm text-text/60">
-              Website developed by{' '}
+              Developed by{' '}
               <a
                 href="https://buildwithsds.com"
                 target="_blank"

@@ -545,7 +545,7 @@ export const MarketingLanding: React.FC = () => {
             </div>
           </div>
           <div className="border-t border-midnight-border pt-8 text-center text-sm text-text-muted">
-            <p>Momentum. Website developed by <a href="https://buildwithsds.com" target="_blank" rel="noopener noreferrer" className="text-mint-primary hover:underline">Build with SDS</a>.</p>
+            <p>Momentum. Developed by <a href="https://buildwithsds.com" target="_blank" rel="noopener noreferrer" className="text-mint-primary hover:underline">Build with SDS</a>.</p>
           </div>
         </div>
       </footer>

@@ -133,7 +133,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           )}
           <div className="text-center text-xs text-text-muted/70">
-            Website developed by{' '}
+            Developed by{' '}
             <a
               href="https://buildwithsds.com"
               target="_blank"
