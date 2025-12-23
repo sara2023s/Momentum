@@ -50,12 +50,12 @@ export const MarketingLanding: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-midnight-bg text-text-main">
+    <div className="min-h-screen bg-obsidian text-text">
       <Navbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-mint-primary/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -67,10 +67,10 @@ export const MarketingLanding: React.FC = () => {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
                 The Productivity System
                 <br />
-                for <span className="text-mint-primary">Builders</span>
+                for <span className="text-primary">Builders</span>
               </h1>
               
-              <p className="text-lg sm:text-xl text-text-muted leading-relaxed max-w-xl">
+              <p className="text-lg sm:text-xl text-text/70 leading-relaxed max-w-xl">
                 Stop juggling apps. Momentum combines deep work, gamification, and analytics into one dark-mode optimized workflow.
               </p>
               
@@ -79,7 +79,7 @@ export const MarketingLanding: React.FC = () => {
                   type="button"
                   onClick={handleGetStarted}
                   disabled={isLoading}
-                  className="px-8 py-3 bg-mint-primary hover:bg-teal-500 text-midnight-bg rounded-lg font-semibold transition-all duration-200 shadow-lg shadow-mint-primary/20 hover:shadow-mint-primary/30 text-base flex items-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-8 py-3 bg-primary hover:bg-blue-500 text-white rounded-lg font-semibold transition-all duration-200 shadow-lg shadow-primary/20 hover:shadow-primary/30 text-base flex items-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {isLoading ? 'Redirecting...' : 'Start Building Momentum'}
                   {!isLoading && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
@@ -100,24 +100,24 @@ export const MarketingLanding: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative"
             >
-              <div className="absolute -inset-4 bg-gradient-to-r from-mint-primary/20 to-teal-500/20 rounded-2xl blur-2xl -z-10"></div>
-              <div className="relative bg-midnight-surface border border-midnight-border rounded-2xl p-6 shadow-2xl transform" style={{ transform: 'perspective(1000px) rotateY(-3deg) rotateX(2deg)' }}>
-                <div className="bg-midnight-bg rounded-lg p-4 space-y-4">
+              <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-blue-400/20 rounded-2xl blur-2xl -z-10"></div>
+              <div className="relative bg-surface border border-surface/50 rounded-2xl p-6 shadow-2xl transform" style={{ transform: 'perspective(1000px) rotateY(-3deg) rotateX(2deg)' }}>
+                <div className="bg-obsidian rounded-lg p-4 space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="h-3 w-24 bg-midnight-surface rounded"></div>
+                    <div className="h-3 w-24 bg-surface rounded"></div>
                     <div className="flex gap-2">
-                      <div className="h-3 w-3 bg-mint-primary rounded-full"></div>
-                      <div className="h-3 w-3 bg-mint-secondary/50 rounded-full"></div>
+                      <div className="h-3 w-3 bg-primary rounded-full"></div>
+                      <div className="h-3 w-3 bg-primary/50 rounded-full"></div>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
-                    <div className="h-20 bg-midnight-surface rounded"></div>
-                    <div className="h-20 bg-midnight-surface rounded"></div>
-                    <div className="h-20 bg-midnight-surface rounded"></div>
+                    <div className="h-20 bg-surface rounded"></div>
+                    <div className="h-20 bg-surface rounded"></div>
+                    <div className="h-20 bg-surface rounded"></div>
                   </div>
                   {/* Focus Sessions Bar Chart Preview */}
-                  <div className="h-32 bg-midnight-surface rounded p-3 flex flex-col justify-end">
-                    <div className="text-[8px] text-text-muted font-mono mb-2">Focus Sessions (Last 7 Days)</div>
+                  <div className="h-32 bg-surface rounded p-3 flex flex-col justify-end">
+                    <div className="text-[8px] text-text/60 font-mono mb-2">Focus Sessions (Last 7 Days)</div>
                     <div className="flex items-end gap-1 h-20">
                       {[25, 45, 30, 60, 50, 70, 55].map((minutes, i) => {
                         const height = (minutes / 70) * 100;
@@ -125,14 +125,14 @@ export const MarketingLanding: React.FC = () => {
                         return (
                           <div key={i} className="flex-1 flex flex-col items-center group">
                             <div
-                              className="w-full bg-mint-primary rounded-t transition-all duration-300 hover:bg-teal-400"
+                              className="w-full bg-primary rounded-t transition-all duration-300 hover:bg-blue-400"
                               style={{
                                 height: `${height}%`,
                                 minHeight: '4px'
                               }}
                               title={`${days[i]}: ${minutes} min`}
                             />
-                            <div className="text-[8px] text-text-muted font-mono mt-1">
+                            <div className="text-[8px] text-text/60 font-mono mt-1">
                               {days[i]}
                             </div>
                           </div>
@@ -148,22 +148,22 @@ export const MarketingLanding: React.FC = () => {
       </section>
 
       {/* Social Proof Bar */}
-      <section className="border-y border-midnight-border bg-midnight-surface/30 py-8">
+      <section className="border-y border-surface/50 bg-surface/30 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6">
-            <p className="text-sm font-mono text-text-muted uppercase tracking-wider">Engineered for flow</p>
+            <p className="text-sm font-mono text-text/60 uppercase tracking-wider">Engineered for flow</p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 text-sm">
-            <div className="flex items-center gap-2 text-text-muted">
-              <Keyboard size={16} className="text-mint-primary" />
+            <div className="flex items-center gap-2 text-text/70">
+              <Keyboard size={16} className="text-primary" />
               <span>100% Keyboard Friendly</span>
             </div>
-            <div className="flex items-center gap-2 text-text-muted">
-              <Clock size={16} className="text-mint-primary" />
+            <div className="flex items-center gap-2 text-text/70">
+              <Clock size={16} className="text-primary" />
               <span>0.3s Load Time</span>
             </div>
-            <div className="flex items-center gap-2 text-text-muted">
-              <Moon size={16} className="text-mint-primary" />
+            <div className="flex items-center gap-2 text-text/70">
+              <Moon size={16} className="text-primary" />
               <span>Dark Mode Native</span>
             </div>
           </div>
@@ -181,9 +181,9 @@ export const MarketingLanding: React.FC = () => {
             className="space-y-6"
           >
             <h2 className="text-3xl sm:text-4xl font-bold">
-              Most productivity apps are <span className="text-mint-primary">digital clutter</span>
+              Most productivity apps are <span className="text-primary">digital clutter</span>
             </h2>
-            <p className="text-lg text-text-muted leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg text-text/70 leading-relaxed max-w-2xl mx-auto">
               Context switching is killing your flow.
             </p>
           </motion.div>
@@ -191,7 +191,7 @@ export const MarketingLanding: React.FC = () => {
       </section>
 
       {/* Features - Zig-Zag Layout */}
-      <section className="py-20 sm:py-28 bg-midnight-surface/20">
+      <section className="py-20 sm:py-28 bg-surface/20">
         {/* Gamification Feature */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -202,13 +202,13 @@ export const MarketingLanding: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="space-y-6"
             >
-              <div className="inline-block px-3 py-1 bg-mint-primary/10 border border-mint-primary/20 rounded text-xs font-mono text-mint-primary mb-4">
+              <div className="inline-block px-3 py-1 bg-primary/10 border border-primary/20 rounded text-xs font-mono text-primary mb-4">
                 GAMIFICATION
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold">
-                Turn Discipline into <span className="text-mint-primary">Dopamine</span>
+                Turn Discipline into <span className="text-primary">Dopamine</span>
               </h2>
-              <p className="text-lg text-text-muted leading-relaxed">
+              <p className="text-lg text-text/70 leading-relaxed">
                 Track habits with GitHub-style contribution graphs.
               </p>
             </motion.div>
@@ -219,22 +219,22 @@ export const MarketingLanding: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="bg-midnight-surface border border-midnight-border rounded-xl p-6 shadow-xl">
-                <div className="bg-midnight-bg rounded-lg p-4 space-y-4">
+              <div className="bg-surface border border-surface/50 rounded-xl p-6 shadow-xl">
+                <div className="bg-obsidian rounded-lg p-4 space-y-4">
                   <div className="flex items-center justify-between mb-2">
-                    <div className="text-sm font-semibold text-text-main">Level 5</div>
-                    <div className="text-xs text-mint-primary font-mono">1,250 XP</div>
+                    <div className="text-sm font-semibold text-text">Level 5</div>
+                    <div className="text-xs text-primary font-mono">1,250 XP</div>
                   </div>
-                  <div className="h-2 bg-midnight-surface rounded-full overflow-hidden mb-4">
-                    <div className="h-full bg-mint-primary rounded-full" style={{ width: '65%' }}></div>
+                  <div className="h-2 bg-surface rounded-full overflow-hidden mb-4">
+                    <div className="h-full bg-primary rounded-full" style={{ width: '65%' }}></div>
                   </div>
                   
                   {/* Actual Heatmap Preview */}
                   <div className="space-y-2">
-                    <div className="text-xs text-text-muted font-mono mb-2">Habit Consistency</div>
+                    <div className="text-xs text-text/70 font-mono mb-2">Habit Consistency</div>
                     <div className="flex items-start gap-2">
                       {/* Day labels */}
-                      <div className="flex flex-col text-[8px] text-text-muted font-mono gap-0.5 pt-0.5">
+                      <div className="flex flex-col text-[8px] text-text/70 font-mono gap-0.5 pt-0.5">
                         <div className="h-[9px]">S</div>
                         <div className="h-[9px]">M</div>
                         <div className="h-[9px]">T</div>
@@ -267,7 +267,7 @@ export const MarketingLanding: React.FC = () => {
                               style={{
                                 width: '9px',
                                 height: '9px',
-                                backgroundColor: intensity > 0 ? '#2DD4BF' : '#1E293B',
+                                backgroundColor: intensity > 0 ? '#10B981' : '#0F172A',
                                 opacity: intensity > 0 ? opacity : 1,
                                 border: intensity === 0 ? '1px solid rgba(51, 65, 85, 0.5)' : 'none'
                               }}
@@ -278,12 +278,12 @@ export const MarketingLanding: React.FC = () => {
                     </div>
                     
                     {/* Legend */}
-                    <div className="flex items-center justify-end gap-2 mt-3 text-[8px] text-text-muted">
+                    <div className="flex items-center justify-end gap-2 mt-3 text-[8px] text-text/70">
                       <span>Less</span>
                       <div className="flex gap-0.5">
-                        <div className="w-2 h-2 rounded-sm bg-mint-primary" style={{ opacity: 0.3 }} />
-                        <div className="w-2 h-2 rounded-sm bg-mint-primary" style={{ opacity: 0.5 }} />
-                        <div className="w-2 h-2 rounded-sm bg-mint-primary" style={{ opacity: 1 }} />
+                        <div className="w-2 h-2 rounded-sm bg-primary" style={{ opacity: 0.3 }} />
+                        <div className="w-2 h-2 rounded-sm bg-primary" style={{ opacity: 0.5 }} />
+                        <div className="w-2 h-2 rounded-sm bg-primary" style={{ opacity: 1 }} />
                       </div>
                       <span>More</span>
                     </div>
@@ -304,15 +304,15 @@ export const MarketingLanding: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="relative order-2 lg:order-1"
             >
-              <div className="bg-midnight-surface border border-midnight-border rounded-xl p-8 shadow-xl">
-                <div className="bg-midnight-bg rounded-lg p-6 space-y-6">
+              <div className="bg-surface border border-surface/50 rounded-xl p-8 shadow-xl">
+                <div className="bg-obsidian rounded-lg p-6 space-y-6">
                   <div className="text-center">
-                    <div className="text-5xl font-mono font-bold text-text-main mb-2">25:00</div>
-                    <div className="text-xs text-text-muted uppercase tracking-wider">Deep Focus</div>
+                    <div className="text-5xl font-mono font-bold text-text mb-2">25:00</div>
+                    <div className="text-xs text-text/70 uppercase tracking-wider">Deep Focus</div>
                   </div>
                   <div className="flex justify-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-mint-primary flex items-center justify-center">
-                      <div className="w-4 h-4 bg-midnight-bg rounded-full"></div>
+                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                      <div className="w-4 h-4 bg-obsidian rounded-full"></div>
                     </div>
                   </div>
                 </div>
@@ -325,13 +325,13 @@ export const MarketingLanding: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="space-y-6 order-1 lg:order-2"
             >
-              <div className="inline-block px-3 py-1 bg-mint-primary/10 border border-mint-primary/20 rounded text-xs font-mono text-mint-primary mb-4">
+              <div className="inline-block px-3 py-1 bg-primary/10 border border-primary/20 rounded text-xs font-mono text-primary mb-4">
                 DEEP WORK
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold">
-                Enter Flow State. <span className="text-mint-primary">Instantly</span>
+                Enter Flow State. <span className="text-primary">Instantly</span>
               </h2>
-              <p className="text-lg text-text-muted leading-relaxed">
+              <p className="text-lg text-text/70 leading-relaxed">
                 Integrated Pomodoro timers sync with your tasks.
               </p>
             </motion.div>
@@ -348,13 +348,13 @@ export const MarketingLanding: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="space-y-6"
             >
-              <div className="inline-block px-3 py-1 bg-mint-primary/10 border border-mint-primary/20 rounded text-xs font-mono text-mint-primary mb-4">
+              <div className="inline-block px-3 py-1 bg-primary/10 border border-primary/20 rounded text-xs font-mono text-primary mb-4">
                 JOURNALING
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold">
-                Debug Your <span className="text-mint-primary">Life</span>
+                Debug Your <span className="text-primary">Life</span>
               </h2>
-              <p className="text-lg text-text-muted leading-relaxed">
+              <p className="text-lg text-text/70 leading-relaxed">
                 Daily structured journaling to capture insights.
               </p>
             </motion.div>
@@ -365,9 +365,9 @@ export const MarketingLanding: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="bg-midnight-surface border border-midnight-border rounded-xl p-6 shadow-xl">
-                <div className="bg-midnight-bg rounded-lg p-4 space-y-4">
-                  <div className="text-xs font-mono text-text-muted mb-3">Productivity Trend</div>
+              <div className="bg-surface border border-surface/50 rounded-xl p-6 shadow-xl">
+                <div className="bg-obsidian rounded-lg p-4 space-y-4">
+                  <div className="text-xs font-mono text-text/70 mb-3">Productivity Trend</div>
                   
                   {/* Line Chart Preview */}
                   <div className="space-y-3">
@@ -377,21 +377,21 @@ export const MarketingLanding: React.FC = () => {
                         return (
                           <div key={i} className="flex-1 flex flex-col items-center group">
                             <div
-                              className="w-full bg-mint-primary rounded-t transition-all duration-300 hover:bg-teal-400"
+                              className="w-full bg-primary rounded-t transition-all duration-300 hover:bg-blue-400"
                               style={{
                                 height: `${height}%`,
                                 minHeight: '4px'
                               }}
                               title={`Week ${i + 1}: ${value}%`}
                             />
-                            <div className="text-[8px] text-text-muted font-mono mt-1">
+                            <div className="text-[8px] text-text/70 font-mono mt-1">
                               {i % 3 === 0 ? i + 1 : ''}
                             </div>
                           </div>
                         );
                       })}
                     </div>
-                    <div className="flex justify-between text-[8px] text-text-muted font-mono pt-2 border-t border-midnight-border">
+                    <div className="flex justify-between text-[8px] text-text/70 font-mono pt-2 border-t border-surface/50">
                       <span>Week 1</span>
                       <span>Week 12</span>
                     </div>
@@ -414,7 +414,7 @@ export const MarketingLanding: React.FC = () => {
             className="text-center mb-12"
           >
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Built for <span className="text-mint-primary">Developers</span>
+              Built for <span className="text-primary">Developers</span>
             </h2>
           </motion.div>
           
@@ -432,13 +432,13 @@ export const MarketingLanding: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-midnight-surface/30 border border-midnight-border rounded-xl p-6 backdrop-blur-sm hover:border-mint-primary/30 transition-all"
+                  className="bg-surface/30 border border-surface/50 rounded-xl p-6 backdrop-blur-sm hover:border-primary/30 transition-all"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-mint-primary/10 flex items-center justify-center mb-4">
-                    <Icon size={20} className="text-mint-primary" />
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Icon size={20} className="text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-1 text-text-main">{feature.title}</h3>
-                  <p className="text-sm text-text-muted">{feature.desc}</p>
+                  <h3 className="font-semibold mb-1 text-text">{feature.title}</h3>
+                  <p className="text-sm text-text/70">{feature.desc}</p>
                 </motion.div>
               );
             })}
@@ -447,44 +447,44 @@ export const MarketingLanding: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-midnight-border bg-midnight-bg py-12">
+      <footer className="border-t border-surface/50 bg-obsidian py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-mint-primary to-teal-500 flex items-center justify-center">
-                  <Zap size={14} className="text-midnight-bg fill-midnight-bg" />
+                <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-primary to-blue-400 flex items-center justify-center">
+                  <Zap size={14} className="text-white fill-white" />
                 </div>
                 <span className="text-lg font-bold font-mono">Momentum</span>
               </div>
-              <p className="text-sm text-text-muted">
+              <p className="text-sm text-text/70">
                 The productivity system for builders.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4 text-text-main">Product</h4>
-              <ul className="space-y-2 text-sm text-text-muted">
-                <li><Link to="/pricing" className="hover:text-mint-primary transition-colors">Pricing</Link></li>
-                <li><Link to="/how-this-came-to-be" className="hover:text-mint-primary transition-colors">How This Came to Be</Link></li>
-                <li><Link to="/changelog" className="hover:text-mint-primary transition-colors">Changelog</Link></li>
+              <h4 className="font-semibold mb-4 text-text">Product</h4>
+              <ul className="space-y-2 text-sm text-text/70">
+                <li><Link to="/pricing" className="hover:text-primary transition-colors">Pricing</Link></li>
+                <li><Link to="/how-this-came-to-be" className="hover:text-primary transition-colors">How This Came to Be</Link></li>
+                <li><Link to="/changelog" className="hover:text-primary transition-colors">Changelog</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4 text-text-main">Company</h4>
-              <ul className="space-y-2 text-sm text-text-muted">
-                <li><Link to="/about" className="hover:text-mint-primary transition-colors">About Developer</Link></li>
-                <li><Link to="/privacy" className="hover:text-mint-primary transition-colors">Privacy</Link></li>
+              <h4 className="font-semibold mb-4 text-text">Company</h4>
+              <ul className="space-y-2 text-sm text-text/70">
+                <li><Link to="/about" className="hover:text-primary transition-colors">About Developer</Link></li>
+                <li><Link to="/privacy" className="hover:text-primary transition-colors">Privacy</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4 text-text-main">Connect</h4>
-              <ul className="space-y-2 text-sm text-text-muted">
-                <li><a href="https://buildwithsds.com" target="_blank" rel="noopener noreferrer" className="hover:text-mint-primary transition-colors">Build with SDS</a></li>
+              <h4 className="font-semibold mb-4 text-text">Connect</h4>
+              <ul className="space-y-2 text-sm text-text/70">
+                <li><a href="https://buildwithsds.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Build with SDS</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-midnight-border pt-8 text-center text-sm text-text-muted">
-            <p>Momentum. Developed by <a href="https://buildwithsds.com" target="_blank" rel="noopener noreferrer" className="text-mint-primary hover:underline">Build with SDS</a>.</p>
+          <div className="border-t border-surface/50 pt-8 text-center text-sm text-text/70">
+            <p>Momentum. Developed by <a href="https://buildwithsds.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Build with SDS</a>.</p>
           </div>
         </div>
       </footer>

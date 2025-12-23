@@ -34,13 +34,13 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="border-b border-midnight-border bg-midnight-bg/80 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="border-b border-surface/50 bg-obsidian/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-mint-primary to-teal-500 flex items-center justify-center shadow-lg shadow-mint-primary/20">
-              <Zap size={18} className="text-midnight-bg fill-midnight-bg" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-blue-400 flex items-center justify-center shadow-lg shadow-primary/20">
+              <Zap size={18} className="text-white fill-white" />
             </div>
             <span className="text-xl font-bold tracking-tight font-mono">Momentum</span>
           </Link>
@@ -49,25 +49,25 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 flex-1">
             <Link 
               to="/" 
-              className="text-text-muted hover:text-text-main transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
+              className="text-text/70 hover:text-text transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
             >
               Home
             </Link>
             <Link 
               to="/pricing" 
-              className="text-text-muted hover:text-text-main transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
+              className="text-text/70 hover:text-text transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
             >
               Pricing
             </Link>
             <Link 
               to="/how-this-came-to-be" 
-              className="text-text-muted hover:text-text-main transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
+              className="text-text/70 hover:text-text transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
             >
               The Story
             </Link>
             <Link 
               to="/about" 
-              className="text-text-muted hover:text-text-main transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
+              className="text-text/70 hover:text-text transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
             >
               About
             </Link>
@@ -78,7 +78,7 @@ export const Navbar: React.FC = () => {
             <button
               onClick={handleGetStarted}
               disabled={isLoading}
-              className="px-4 py-2 bg-mint-primary hover:bg-teal-500 text-midnight-bg rounded-lg font-medium transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              className="px-4 py-2 bg-primary hover:bg-blue-500 text-white rounded-lg font-medium transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
             >
               {isLoading ? 'Redirecting...' : 'Get Started'}
             </button>
