@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useTransition, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Flame, Check } from 'lucide-react';
-import { getHabits, createHabit, toggleHabit } from '../actions/habits';
+import { Plus, Flame, Check, Trash2 } from 'lucide-react';
+import { getHabits, createHabit, toggleHabit, deleteHabit } from '../actions/habits';
 import { getHabitLogsForHeatmap } from '../actions/visualizations';
 import { addXP } from '../actions/user';
 import { useAuth } from '../contexts/AuthContext';
@@ -119,6 +119,38 @@ export const Habits: React.FC = () => {
     });
   };
 
+  const handleDelete = async (habitId: string) => {
+    if (!window.confirm('Are you sure you want to delete this habit? This action cannot be undone.')) {
+      return;
+    }
+
+    const habit = habits.find((h) => h.id === habitId);
+    if (!habit) return;
+
+    // Optimistic update - remove from UI immediately
+    setHabits((prev) => prev.filter((h) => h.id !== habitId));
+
+    startTransition(async () => {
+      try {
+        await deleteHabit(habitId);
+        // Refetch to ensure consistency and update heatmap
+        if (authUser) {
+          const [updatedHabits, updatedHeatmap] = await Promise.all([
+            getHabits(authUser.id),
+            getHabitLogsForHeatmap(authUser.id)
+          ]);
+          setHabits(updatedHabits);
+          setHeatmapData(updatedHeatmap);
+        }
+      } catch (error) {
+        console.error('Failed to delete habit:', error);
+        // Revert on error - add the habit back
+        setHabits((prev) => [...prev, habit].sort((a, b) => a.title.localeCompare(b.title)));
+        alert('Failed to delete habit. Please try again.');
+      }
+    });
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
@@ -166,12 +198,25 @@ export const Habits: React.FC = () => {
               }`}
             >
             <div className="flex justify-between items-start mb-4">
-               <h3 className={`font-medium text-lg ${habit.completedToday ? 'text-text/70' : 'text-text'}`}>
+               <h3 className={`font-medium text-lg flex-1 ${habit.completedToday ? 'text-text/70' : 'text-text'}`}>
                  {habit.title}
                </h3>
-               <div className={`flex items-center gap-1 text-sm font-mono ${habit.streak > 0 ? 'text-primary' : 'text-text/70'}`}>
-                 <Flame size={14} className={habit.streak > 0 ? 'fill-orange-500' : ''} />
-                 {habit.streak}
+               <div className="flex items-center gap-2">
+                 <div className={`flex items-center gap-1 text-sm font-mono ${habit.streak > 0 ? 'text-primary' : 'text-text/70'}`}>
+                   <Flame size={14} className={habit.streak > 0 ? 'fill-orange-500' : ''} />
+                   {habit.streak}
+                 </div>
+                 <button
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     handleDelete(habit.id);
+                   }}
+                   className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-red-400"
+                   title="Delete habit"
+                   aria-label="Delete habit"
+                 >
+                   <Trash2 size={16} />
+                 </button>
                </div>
             </div>
 
