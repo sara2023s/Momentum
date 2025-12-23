@@ -118,3 +118,87 @@ export async function addXP(userId: string, amount: number) {
     throw new Error('Failed to add XP');
   }
 }
+
+export async function updateUserProfile(userId: string, updates: {
+  name?: string;
+  birthday?: Date | null;
+  phoneNumber?: string | null;
+  profileImageUrl?: string | null;
+}) {
+  try {
+    const updateData: any = {};
+    
+    if (updates.name !== undefined) {
+      updateData.name = updates.name;
+    }
+    // Only include these fields if they exist in the database
+    // Check if columns exist by trying to update them
+    if (updates.birthday !== undefined) {
+      updateData.birthday = updates.birthday ? updates.birthday.toISOString() : null;
+    }
+    if (updates.phoneNumber !== undefined) {
+      updateData.phoneNumber = updates.phoneNumber;
+    }
+    if (updates.profileImageUrl !== undefined) {
+      updateData.profileImageUrl = updates.profileImageUrl;
+    }
+
+    const { data: updated, error } = await supabase
+      .from('User')
+      .update(updateData)
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) {
+      // If columns don't exist, provide helpful error message
+      if (error.code === '42703' || error.message?.includes('column')) {
+        throw new Error('Profile columns not found. Please run the migration SQL in Supabase. See supabase/migrations/add_user_profile_fields.sql');
+      }
+      throw error;
+    }
+
+    if (!updated) {
+      throw new Error('Failed to update user');
+    }
+
+    return {
+      name: updated.name || 'User',
+      xp: updated.currentXP,
+      level: updated.level,
+    };
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    throw error instanceof Error ? error : new Error('Failed to update user profile');
+  }
+}
+
+export async function uploadProfileImage(userId: string, file: File): Promise<string> {
+  try {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${userId}-${Date.now()}.${fileExt}`;
+    const filePath = `profile-images/${fileName}`;
+
+    // Upload file to Supabase Storage
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    // Get public URL
+    const { data } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  } catch (error) {
+    console.error('Error uploading profile image:', error);
+    throw new Error('Failed to upload profile image');
+  }
+}

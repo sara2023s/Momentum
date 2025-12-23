@@ -232,7 +232,14 @@ export const Habits: React.FC = () => {
         <div className="text-center text-text/70 py-12">Loading habits...</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4">
-          {habits.map((habit) => {
+          {[...habits].sort((a, b) => {
+            // Uncompleted habits first (completedToday === false), then completed habits
+            if (a.completedToday === b.completedToday) {
+              // If both have same completion status, maintain original order
+              return 0;
+            }
+            return a.completedToday ? 1 : -1;
+          }).map((habit) => {
             // Find if this real ID was mapped from a temp ID
             const tempId = Array.from(tempToRealIdMap.current.entries()).find(([_, realId]) => realId === habit.id)?.[0];
             // Use temp ID as key if it exists, otherwise use real ID - this maintains continuity
@@ -252,7 +259,7 @@ export const Habits: React.FC = () => {
                   : 'bg-surface border-surface/50 hover:border-surface/70'
               }`}
             >
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start mb-4 relative">
               {editingId === habit.id ? (
                 <div className="flex-1 flex items-center gap-2">
                   <input
@@ -295,11 +302,11 @@ export const Habits: React.FC = () => {
                 </div>
               ) : (
                 <>
-                  <h3 className={`font-medium text-lg flex-1 ${habit.completedToday ? 'text-text/70' : 'text-text'}`}>
+                  <h3 className={`font-medium text-lg flex-1 pr-2 ${habit.completedToday ? 'text-text/70' : 'text-text'}`}>
                     {habit.title}
                   </h3>
-                  <div className="flex items-center gap-2">
-                    <div className={`flex items-center gap-1 text-sm font-mono ${habit.streak > 0 ? 'text-primary' : 'text-text/70'}`}>
+                  <div className="flex items-center gap-0.5 absolute top-0 right-0">
+                    <div className={`flex items-center gap-1 text-sm font-mono px-1 ${habit.streak > 0 ? 'text-primary' : 'text-text/70'}`}>
                       <Flame size={14} className={habit.streak > 0 ? 'fill-orange-500' : ''} />
                       {habit.streak}
                     </div>

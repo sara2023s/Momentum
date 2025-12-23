@@ -7,6 +7,7 @@ import { Habits } from './components/Habits';
 import { Tasks } from './components/Tasks';
 import { Focus } from './components/Focus';
 import { Journal } from './components/Journal';
+import { Settings } from './components/Settings';
 import { MarketingLanding } from './components/marketing/Landing';
 import { Pricing } from './components/marketing/Pricing';
 import { About } from './components/marketing/About';
@@ -166,6 +167,7 @@ const AppContent: React.FC = () => {
                   <Route path="tasks" element={<Tasks />} />
                   <Route path="focus" element={<Focus />} />
                   <Route path="journal" element={<Journal />} />
+                  <Route path="settings" element={<Settings />} />
                   <Route path="*" element={<Navigate to="/app" replace />} />
                 </Routes>
               </Layout>

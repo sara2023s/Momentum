@@ -9,7 +9,8 @@ import {
   Menu, 
   X,
   Zap,
-  LogOut
+  LogOut,
+  Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../App';
@@ -122,6 +123,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <SidebarItem to="/app/tasks" icon={ListTodo} label="Tasks" onClick={() => setIsMobileOpen(false)} />
           <SidebarItem to="/app/focus" icon={Timer} label="Focus" onClick={() => setIsMobileOpen(false)} />
           <SidebarItem to="/app/journal" icon={Book} label="Journal" onClick={() => setIsMobileOpen(false)} />
+          <SidebarItem to="/app/settings" icon={Settings} label="Settings" onClick={() => setIsMobileOpen(false)} />
         </nav>
 
         <div className="p-6 border-t border-surface/50 space-y-4">

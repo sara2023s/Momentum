@@ -24,6 +24,10 @@ model User {
   tasks         Task[]
   focusSessions FocusSession[]
   dailyRetros   DailyRetro[]
+  
+  // Note: This schema is for reference only. The actual database is managed in Supabase.
+  // To add profile fields (birthday, phoneNumber, profileImageUrl), run the SQL migration
+  // in supabase/migrations/add_user_profile_fields.sql
 }
 
 model Habit {

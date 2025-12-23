@@ -17,8 +17,9 @@ export interface Task {
   id: string;
   title: string;
   completed: boolean;
-  type: 'my_day' | 'backlog';
+  type: 'my_day' | 'backlog' | 'tomorrow';
   createdAt: number;
+  dueDate?: number;
 }
 
 export interface FocusSession {
@@ -46,9 +47,9 @@ export interface AppState {
 export type AppContextType = AppState & {
   addHabit: (title: string) => void;
   toggleHabit: (id: string) => void;
-  addTask: (title: string, type: 'my_day' | 'backlog') => void;
+  addTask: (title: string, type: 'my_day' | 'backlog' | 'tomorrow') => void;
   toggleTask: (id: string) => void;
-  moveTask: (id: string, target: 'my_day' | 'backlog') => void;
+  moveTask: (id: string, target: 'my_day' | 'backlog' | 'tomorrow') => void;
   deleteTask: (id: string) => void;
   addFocusSession: (duration: number) => void;
   addJournalEntry: (entry: Omit<JournalEntry, 'id'>) => void;

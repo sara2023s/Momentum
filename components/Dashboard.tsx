@@ -173,7 +173,7 @@ export const Dashboard: React.FC = () => {
             <h4 className="font-semibold text-text flex items-center gap-2">
               <Flame size={18} className="text-accent" /> Habits
             </h4>
-            <Link to="/habits" className="text-xs text-primary hover:text-blue-400 transition-colors">View All</Link>
+            <Link to="/app/habits" className="text-xs text-primary hover:text-blue-400 transition-colors">View All</Link>
           </div>
           <div className="flex items-center gap-6">
             <div className="h-24 w-24 relative">
@@ -211,7 +211,7 @@ export const Dashboard: React.FC = () => {
             <h4 className="font-semibold text-text flex items-center gap-2">
               <CheckCircle2 size={18} className="text-emerald-500" /> My Day
             </h4>
-            <Link to="/tasks" className="text-xs text-primary hover:text-blue-400 transition-colors">Manage</Link>
+            <Link to="/app/tasks" className="text-xs text-primary hover:text-blue-400 transition-colors">Manage</Link>
           </div>
           <div className="space-y-3">
              {myDayTasks.slice(0, 3).map(task => (
@@ -242,7 +242,7 @@ export const Dashboard: React.FC = () => {
             <div className="text-3xl font-bold text-text">{focusMinutes} <span className="text-base font-normal text-text/60">min</span></div>
             <div className="text-sm text-text/70">Total Focus Time Today</div>
           </div>
-          <Link to="/focus" className="inline-flex items-center gap-2 text-sm text-primary hover:text-blue-400 transition-colors">
+          <Link to="/app/focus" className="inline-flex items-center gap-2 text-sm text-primary hover:text-blue-400 transition-colors">
             Start Session <ArrowRight size={14} />
           </Link>
         </Card>

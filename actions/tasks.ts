@@ -21,7 +21,7 @@ export async function getTasks(userId: string) {
       id: task.id,
       title: task.title,
       completed: task.isCompleted || false,
-      type: (task.type === 'MY_DAY' ? 'my_day' : task.type === 'PLANNED' ? 'planned' : 'backlog') as 'my_day' | 'backlog',
+      type: (task.type === 'MY_DAY' ? 'my_day' : task.type === 'PLANNED' ? 'tomorrow' : 'backlog') as 'my_day' | 'backlog' | 'tomorrow',
       createdAt: Date.now(), // Fallback since createdAt doesn't exist in DB
       dueDate: task.dueDate ? new Date(task.dueDate).getTime() : undefined,
     }));
@@ -31,9 +31,9 @@ export async function getTasks(userId: string) {
   }
 }
 
-export async function createTask(userId: string, title: string, type: 'my_day' | 'backlog' | 'planned', dueDate?: Date) {
+export async function createTask(userId: string, title: string, type: 'my_day' | 'backlog' | 'tomorrow', dueDate?: Date) {
   try {
-    const taskType = type === 'my_day' ? 'MY_DAY' : type === 'planned' ? 'PLANNED' : 'BACKLOG';
+    const taskType = type === 'my_day' ? 'MY_DAY' : type === 'tomorrow' ? 'PLANNED' : 'BACKLOG';
     
     const { data: task, error } = await supabase
       .from('Task')
@@ -103,7 +103,7 @@ export async function toggleTask(taskId: string) {
       id: updatedTask.id,
       title: updatedTask.title,
       completed: updatedTask.isCompleted || false,
-      type: (updatedTask.type === 'MY_DAY' ? 'my_day' : updatedTask.type === 'PLANNED' ? 'planned' : 'backlog') as 'my_day' | 'backlog',
+      type: (updatedTask.type === 'MY_DAY' ? 'my_day' : updatedTask.type === 'PLANNED' ? 'tomorrow' : 'backlog') as 'my_day' | 'backlog' | 'tomorrow',
       createdAt: Date.now(), // Fallback since createdAt doesn't exist in DB
       dueDate: updatedTask.dueDate ? new Date(updatedTask.dueDate).getTime() : undefined,
     };
@@ -113,9 +113,9 @@ export async function toggleTask(taskId: string) {
   }
 }
 
-export async function moveTask(taskId: string, targetType: 'my_day' | 'backlog' | 'planned') {
+export async function moveTask(taskId: string, targetType: 'my_day' | 'backlog' | 'tomorrow') {
   try {
-    const taskType = targetType === 'my_day' ? 'MY_DAY' : targetType === 'planned' ? 'PLANNED' : 'BACKLOG';
+    const taskType = targetType === 'my_day' ? 'MY_DAY' : targetType === 'tomorrow' ? 'PLANNED' : 'BACKLOG';
     
     const { data: updatedTask, error } = await supabase
       .from('Task')
@@ -143,6 +143,37 @@ export async function moveTask(taskId: string, targetType: 'my_day' | 'backlog' 
   } catch (error) {
     console.error('Error moving task:', error);
     throw new Error('Failed to move task');
+  }
+}
+
+export async function updateTaskDueDate(taskId: string, dueDate: Date | null) {
+  try {
+    const { data: updatedTask, error } = await supabase
+      .from('Task')
+      .update({ dueDate: dueDate ? dueDate.toISOString() : null })
+      .eq('id', taskId)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    if (!updatedTask) {
+      throw new Error('Failed to update task');
+    }
+
+    return {
+      id: updatedTask.id,
+      title: updatedTask.title,
+      completed: updatedTask.isCompleted || false,
+      type: (updatedTask.type === 'MY_DAY' ? 'my_day' : updatedTask.type === 'PLANNED' ? 'tomorrow' : 'backlog') as 'my_day' | 'backlog' | 'tomorrow',
+      createdAt: Date.now(),
+      dueDate: updatedTask.dueDate ? new Date(updatedTask.dueDate).getTime() : undefined,
+    };
+  } catch (error) {
+    console.error('Error updating task due date:', error);
+    throw new Error('Failed to update task due date');
   }
 }
 

@@ -377,7 +377,7 @@ export const Journal: React.FC = () => {
                         </button>
                         <button
                           onClick={() => handleDelete(entry.id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-red-400"
+                          className="opacity-100 p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-red-400 transition-colors"
                           title="Delete entry"
                           aria-label="Delete entry"
                         >
