@@ -24,6 +24,12 @@ export default defineConfig(({ mode }) => {
         assetsDir: 'assets',
         sourcemap: false,
         minify: 'esbuild',
-      }
+        rollupOptions: {
+          external: ['@prisma/client'],
+        },
+      },
+      optimizeDeps: {
+        exclude: ['@prisma/client'],
+      },
     };
 });
