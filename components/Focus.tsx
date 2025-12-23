@@ -143,15 +143,15 @@ export const Focus: React.FC = () => {
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-midnight-surface border border-midnight-border rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 w-full max-w-md"
+        className="bg-surface border border-surface/50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 w-full max-w-md"
       >
-        <div className="w-2 h-2 rounded-full bg-mint-primary animate-pulse"></div>
+        <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
         <div className="flex-1">
-          <div className="text-xs sm:text-sm text-text-muted">
+          <div className="text-xs sm:text-sm text-text/70">
             {loading ? 'Loading...' : `${todayCount} Session${todayCount !== 1 ? 's' : ''} Today`}
           </div>
         </div>
-        <Clock size={14} className="sm:w-4 sm:h-4 text-text-muted" />
+        <Clock size={14} className="sm:w-4 sm:h-4 text-text/70" />
       </motion.div>
 
       {/* Main Timer Section */}
@@ -170,7 +170,7 @@ export const Focus: React.FC = () => {
               stroke="currentColor" 
               strokeWidth="4" 
               fill="transparent" 
-              className="text-midnight-surface/50"
+              className="text-surface/50"
             />
             <circle 
               cx="50" cy="50" r={radius} 
@@ -190,11 +190,11 @@ export const Focus: React.FC = () => {
               <ActiveIcon size={20} className={`sm:w-6 sm:h-6 ${MODES[mode].color}`} />
             </div>
             
-            <div className="text-4xl sm:text-5xl lg:text-6xl font-mono font-bold tracking-tighter text-text-main mb-1 tabular-nums">
+            <div className="text-4xl sm:text-5xl lg:text-6xl font-mono font-bold tracking-tighter text-text mb-1 tabular-nums">
               {formatTime(timeLeft)}
             </div>
             
-            <div className="text-text-muted uppercase tracking-wider text-xs font-medium">
+            <div className="text-text/70 uppercase tracking-wider text-xs font-medium">
               {MODES[mode].label}
             </div>
           </div>
@@ -209,30 +209,30 @@ export const Focus: React.FC = () => {
               onClick={toggleTimer}
               className={`h-12 w-12 sm:h-14 sm:w-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg active:scale-95 touch-manipulation ${
                 isActive 
-                  ? 'bg-midnight-surface text-text-main/80 hover:bg-midnight-surface/70 border border-midnight-border' 
-                  : 'bg-mint-primary text-midnight-bg hover:bg-teal-500 border border-mint-primary'
+                  ? 'bg-surface text-text/80 hover:bg-surface/70 border border-surface/50' 
+                  : 'bg-primary text-white hover:bg-blue-500 border border-mint-primary'
               }`}
             >
               {isActive ? <Pause size={20} className="sm:w-6 sm:h-6" fill="currentColor" /> : <Play size={20} className="sm:w-6 sm:h-6 ml-0.5" fill="currentColor" />}
             </button>
             <button 
               onClick={resetTimer}
-              className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-midnight-surface border border-midnight-border text-text-muted hover:bg-midnight-surface/70 hover:text-text-main hover:border-midnight-border/70 flex items-center justify-center transition-all duration-200 active:scale-95 touch-manipulation"
+              className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-surface border border-surface/50 text-text/70 hover:bg-surface/70 hover:text-text hover:border-surface/50/70 flex items-center justify-center transition-all duration-200 active:scale-95 touch-manipulation"
             >
               <RotateCcw size={18} className="sm:w-5 sm:h-5" />
             </button>
           </div>
 
           {/* Mode Switcher */}
-          <div className="bg-midnight-surface border border-midnight-border rounded-xl p-1.5 flex gap-1.5">
+          <div className="bg-surface border border-surface/50 rounded-xl p-1.5 flex gap-1.5">
             {(Object.keys(MODES) as Array<keyof typeof MODES>).map((m) => (
               <button
                 key={m}
                 onClick={() => setMode(m)}
                 className={`flex-1 px-3 sm:px-4 py-2.5 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 touch-manipulation min-h-[44px] ${
                   mode === m 
-                    ? `bg-midnight-surface/70 text-text-main ${MODES[m].ring} ring-2` 
-                    : 'text-text-muted hover:text-text-main hover:bg-midnight-bg'
+                    ? `bg-surface/70 text-text ${MODES[m].ring} ring-2` 
+                    : 'text-text/70 hover:text-text hover:bg-obsidian'
                 }`}
               >
                 {MODES[m].label}
@@ -241,12 +241,12 @@ export const Focus: React.FC = () => {
           </div>
 
           {/* Custom Duration Input */}
-          <div className="bg-midnight-surface border border-midnight-border rounded-xl p-3 sm:p-4 space-y-3">
+          <div className="bg-surface border border-surface/50 rounded-xl p-3 sm:p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-xs sm:text-sm font-medium text-text-main">Custom Duration</label>
+              <label className="text-xs sm:text-sm font-medium text-text">Custom Duration</label>
               <button
                 onClick={() => setShowCustomInput(!showCustomInput)}
-                className="text-xs text-text-muted hover:text-text-main transition-colors touch-manipulation"
+                className="text-xs text-text/70 hover:text-text transition-colors touch-manipulation"
               >
                 {showCustomInput ? 'Hide' : 'Set Custom'}
               </button>
@@ -263,10 +263,10 @@ export const Focus: React.FC = () => {
                     setCustomMinutes(Math.min(120, Math.max(1, value)));
                   }}
                   onBlur={() => setTimeLeft(customMinutes * 60)}
-                  className="flex-1 bg-midnight-bg border border-midnight-border rounded-lg px-3 sm:px-4 py-2 text-text-main text-center font-mono text-sm sm:text-base focus:border-mint-primary focus:ring-2 focus:ring-mint-primary/20 outline-none"
+                  className="flex-1 bg-obsidian border border-surface/50 rounded-lg px-3 sm:px-4 py-2 text-text text-center font-mono text-sm sm:text-base focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none"
                   disabled={isActive}
                 />
-                <span className="text-text-muted text-xs sm:text-sm">min</span>
+                <span className="text-text/70 text-xs sm:text-sm">min</span>
               </div>
             )}
           </div>
@@ -280,8 +280,8 @@ export const Focus: React.FC = () => {
         transition={{ delay: 0.2 }}
         className="w-full max-w-2xl"
       >
-        <div className="bg-midnight-surface border border-midnight-border rounded-xl p-3 sm:p-4">
-          <div className="text-xs text-text-muted uppercase tracking-wider font-medium mb-2 sm:mb-3 text-center">Quick Presets</div>
+        <div className="bg-surface border border-surface/50 rounded-xl p-3 sm:p-4">
+          <div className="text-xs text-text/70 uppercase tracking-wider font-medium mb-2 sm:mb-3 text-center">Quick Presets</div>
           <div className="flex flex-wrap gap-2 justify-center">
             {PRESET_MINUTES.map((minutes) => (
               <button
@@ -290,8 +290,8 @@ export const Focus: React.FC = () => {
                 disabled={isActive}
                 className={`px-4 sm:px-5 py-2.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 touch-manipulation min-h-[44px] min-w-[44px] ${
                   customMinutes === minutes
-                    ? 'bg-mint-primary text-midnight-bg border border-mint-primary'
-                    : 'bg-midnight-bg border border-midnight-border text-text-muted hover:bg-midnight-surface hover:text-text-main hover:border-midnight-border/70'
+                    ? 'bg-primary text-white border border-mint-primary'
+                    : 'bg-obsidian border border-surface/50 text-text/70 hover:bg-surface hover:text-text hover:border-surface/50/70'
                 } ${isActive ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
               >
                 {minutes}m

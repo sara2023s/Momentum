@@ -124,11 +124,11 @@ export const Habits: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold">Habit Engine</h2>
-          <p className="text-text-muted text-xs sm:text-sm">Consistency is the key to mastery.</p>
+          <p className="text-text/70 text-xs sm:text-sm">Consistency is the key to mastery.</p>
         </div>
         <div className="text-left sm:text-right">
-          <div className="text-xl sm:text-2xl font-bold text-mint-primary">{habits.filter(h => h.completedToday).length}/{habits.length}</div>
-          <div className="text-xs text-text-muted uppercase tracking-wider">Completed</div>
+          <div className="text-xl sm:text-2xl font-bold text-primary">{habits.filter(h => h.completedToday).length}/{habits.length}</div>
+          <div className="text-xs text-text/70 uppercase tracking-wider">Completed</div>
         </div>
       </div>
 
@@ -137,12 +137,12 @@ export const Habits: React.FC = () => {
         <ContributionHeatmap 
           data={heatmapData} 
           title="Habit Consistency" 
-          color="#2DD4BF"
+          color="#3B82F6"
         />
       )}
 
       {loading ? (
-        <div className="text-center text-text-muted py-12">Loading habits...</div>
+        <div className="text-center text-text/70 py-12">Loading habits...</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4">
           {habits.map((habit) => {
@@ -161,15 +161,15 @@ export const Habits: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               className={`p-5 rounded-xl border transition-all duration-300 group ${
                 habit.completedToday 
-                  ? 'bg-midnight-surface/50 border-mint-primary/30' 
-                  : 'bg-midnight-surface border-midnight-border hover:border-midnight-border/70'
+                  ? 'bg-surface/50 border-primary/30' 
+                  : 'bg-surface border-surface/50 hover:border-surface/70'
               }`}
             >
             <div className="flex justify-between items-start mb-4">
-               <h3 className={`font-medium text-lg ${habit.completedToday ? 'text-text-muted' : 'text-text-main'}`}>
+               <h3 className={`font-medium text-lg ${habit.completedToday ? 'text-text/70' : 'text-text'}`}>
                  {habit.title}
                </h3>
-               <div className={`flex items-center gap-1 text-sm font-mono ${habit.streak > 0 ? 'text-mint-primary' : 'text-text-muted'}`}>
+               <div className={`flex items-center gap-1 text-sm font-mono ${habit.streak > 0 ? 'text-primary' : 'text-text/70'}`}>
                  <Flame size={14} className={habit.streak > 0 ? 'fill-orange-500' : ''} />
                  {habit.streak}
                </div>
@@ -180,8 +180,8 @@ export const Habits: React.FC = () => {
               disabled={isPending}
               className={`w-full py-3 sm:py-3.5 rounded-lg flex items-center justify-center gap-2 font-medium transition-all disabled:opacity-50 min-h-[44px] text-sm sm:text-base ${
                 habit.completedToday
-                  ? 'bg-mint-primary/10 text-mint-primary hover:bg-mint-primary/20'
-                  : 'bg-midnight-surface text-text-main/80 hover:bg-midnight-surface/70 hover:text-text-main'
+                  ? 'bg-primary/10 text-primary hover:bg-primary/20'
+                  : 'bg-surface text-text/80 hover:bg-surface/70 hover:text-text'
               }`}
             >
               {habit.completedToday ? (
@@ -197,15 +197,15 @@ export const Habits: React.FC = () => {
           })}
         
         {/* Add Habit Card */}
-        <form onSubmit={handleAdd} className="p-4 sm:p-5 rounded-xl border border-midnight-border border-dashed bg-midnight-surface/30 flex flex-col justify-center items-center hover:bg-midnight-surface/50 transition-colors min-h-[120px]">
+        <form onSubmit={handleAdd} className="p-4 sm:p-5 rounded-xl border border-surface/50 border-dashed bg-surface/30 flex flex-col justify-center items-center hover:bg-surface/50 transition-colors min-h-[120px]">
           <input
             type="text"
             placeholder="New Habit..."
             value={newHabit}
             onChange={(e) => setNewHabit(e.target.value)}
-            className="bg-transparent text-center border-b border-midnight-border focus:border-mint-primary outline-none w-full text-text-main placeholder-text-muted mb-3 sm:mb-4 pb-2 text-sm sm:text-base min-h-[44px]"
+            className="bg-transparent text-center border-b border-surface/50 focus:border-primary outline-none w-full text-text placeholder-text/50 mb-3 sm:mb-4 pb-2 text-sm sm:text-base min-h-[44px]"
           />
-          <button type="submit" disabled={!newHabit} className="p-2.5 sm:p-3 rounded-full bg-midnight-surface text-text-muted hover:bg-mint-primary hover:text-midnight-bg transition-all disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center">
+          <button type="submit" disabled={!newHabit} className="p-2.5 sm:p-3 rounded-full bg-surface text-text/70 hover:bg-primary hover:text-white transition-all disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center">
             <Plus size={20} />
           </button>
         </form>

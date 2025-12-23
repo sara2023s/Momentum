@@ -113,12 +113,12 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
   }, [data]);
 
   return (
-    <div className="bg-midnight-surface border border-midnight-border rounded-xl p-3 sm:p-4 md:p-6">
-      <h3 className="text-xs sm:text-sm md:text-base font-semibold text-text-main mb-2 sm:mb-3 md:mb-4">{title}</h3>
+    <div className="bg-surface border border-surface/50 rounded-xl p-3 sm:p-4 md:p-6">
+      <h3 className="text-xs sm:text-sm md:text-base font-semibold text-text mb-2 sm:mb-3 md:mb-4">{title}</h3>
       
       <div className="flex items-start gap-1.5 sm:gap-2">
         {/* Day labels - aligned with grid rows */}
-        <div className="flex flex-col text-[9px] sm:text-[10px] text-text-muted font-mono" style={{ 
+        <div className="flex flex-col text-[9px] sm:text-[10px] text-text/60 font-mono" style={{ 
           gap: '4px' // Match grid gap-1 (0.25rem = 4px)
         }}>
           <div className="h-[11px] flex items-center justify-end pr-1 sm:pr-2">S</div>
@@ -150,15 +150,15 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
                   key={`${square.weekIndex}-${square.dayIndex}-${index}`}
                   className={`rounded-sm transition-all duration-200 cursor-pointer relative ${
                     square.count > 0 
-                      ? 'hover:ring-2 hover:ring-mint-primary/50 hover:scale-110' 
+                      ? 'hover:ring-2 hover:ring-primary/50 hover:scale-110' 
                       : ''
-                  } ${isToday ? 'ring-2 ring-mint-primary/30' : ''}`}
+                  } ${isToday ? 'ring-2 ring-primary/30' : ''}`}
                   style={{
                     width: '11px',
                     height: '11px',
-                    backgroundColor: square.count > 0 ? color : '#0F172A', // midnight-bg for empty squares
+                    backgroundColor: square.count > 0 ? color : '#172554',
                     opacity: square.count > 0 ? opacity : 1,
-                    border: square.count === 0 ? '1px solid rgba(51, 65, 85, 0.3)' : 'none' // midnight-border for empty squares
+                    border: square.count === 0 ? '1px solid rgba(23, 37, 84, 0.5)' : 'none'
                   }}
                   onMouseEnter={(e) => handleSquareHover(e, square.date, square.count)}
                   onMouseLeave={handleSquareLeave}
@@ -171,7 +171,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-end gap-2 mt-3 sm:mt-4 text-xs text-text-muted">
+      <div className="flex items-center justify-end gap-2 mt-3 sm:mt-4 text-xs text-text/60">
         <span>Less</span>
         <div className="flex gap-1">
           <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: color, opacity: 0.2 }} />
@@ -184,7 +184,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
       {/* Tooltip */}
       {tooltip && (
         <div
-          className="fixed z-50 px-3 py-2 bg-midnight-surface border border-midnight-border rounded-lg text-sm text-text-main pointer-events-none shadow-lg"
+          className="fixed z-50 px-3 py-2 bg-surface border border-surface/50 rounded-lg text-sm text-text pointer-events-none shadow-lg"
           style={{
             left: `${tooltip.x}px`,
             top: `${tooltip.y}px`,
@@ -192,7 +192,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
           }}
         >
           <div className="font-medium">{tooltip.date}</div>
-          <div className="text-text-muted">{tooltip.count} {tooltip.count === 1 ? 'completion' : 'completions'}</div>
+          <div className="text-text/70">{tooltip.count} {tooltip.count === 1 ? 'completion' : 'completions'}</div>
         </div>
       )}
     </div>
