@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useTransition, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Flame, Check, Trash2 } from 'lucide-react';
-import { getHabits, createHabit, toggleHabit, deleteHabit } from '../actions/habits';
+import { Plus, Flame, Check, Trash2, Edit2, X, Check as CheckIcon } from 'lucide-react';
+import { getHabits, createHabit, toggleHabit, deleteHabit, updateHabit } from '../actions/habits';
 import { getHabitLogsForHeatmap } from '../actions/visualizations';
 import { addXP } from '../actions/user';
 import { useAuth } from '../contexts/AuthContext';
@@ -17,7 +17,10 @@ export const Habits: React.FC = () => {
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(true);
   const [heatmapData, setHeatmapData] = useState<{ date: string; count: number }[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState('');
   const tempToRealIdMap = useRef<Map<string, string>>(new Map());
+  const editInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!authUser) return;
@@ -147,6 +150,58 @@ export const Habits: React.FC = () => {
         // Revert on error - add the habit back
         setHabits((prev) => [...prev, habit].sort((a, b) => a.title.localeCompare(b.title)));
         alert('Failed to delete habit. Please try again.');
+      }
+    });
+  };
+
+  const handleStartEdit = (habitId: string, currentTitle: string) => {
+    setEditingId(habitId);
+    setEditValue(currentTitle);
+    // Focus input after state update
+    setTimeout(() => {
+      editInputRef.current?.focus();
+      editInputRef.current?.select();
+    }, 0);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditValue('');
+  };
+
+  const handleSaveEdit = async (habitId: string) => {
+    const trimmedValue = editValue.trim();
+    if (!trimmedValue) {
+      handleCancelEdit();
+      return;
+    }
+
+    const habit = habits.find((h) => h.id === habitId);
+    if (!habit || habit.title === trimmedValue) {
+      handleCancelEdit();
+      return;
+    }
+
+    // Optimistic update
+    setHabits((prev) =>
+      prev.map((h) => (h.id === habitId ? { ...h, title: trimmedValue } : h))
+    );
+
+    startTransition(async () => {
+      try {
+        const updated = await updateHabit(habitId, { title: trimmedValue });
+        setHabits((prev) => prev.map((h) => (h.id === habitId ? updated : h)));
+        setEditingId(null);
+        setEditValue('');
+      } catch (error) {
+        console.error('Failed to update habit:', error);
+        // Revert on error
+        setHabits((prev) =>
+          prev.map((h) => (h.id === habitId ? habit : h))
+        );
+        alert('Failed to update habit. Please try again.');
+        setEditingId(null);
+        setEditValue('');
       }
     });
   };

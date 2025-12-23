@@ -194,6 +194,60 @@ export async function deleteHabit(habitId: string) {
   }
 }
 
+export async function updateHabit(habitId: string, updates: { title?: string; category?: string }) {
+  try {
+    const updateData: { title?: string; category?: string } = {};
+    if (updates.title !== undefined) {
+      updateData.title = updates.title;
+    }
+    if (updates.category !== undefined) {
+      updateData.category = updates.category;
+    }
+
+    const { data: habit, error } = await supabase
+      .from('Habit')
+      .update(updateData)
+      .eq('id', habitId)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+
+    // Fetch today's log to determine completion status
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const { data: logs } = await supabase
+      .from('HabitLog')
+      .select('*')
+      .eq('habitId', habitId)
+      .gte('date', today.toISOString())
+      .lt('date', tomorrow.toISOString());
+
+    const todayLog = logs && logs.length > 0 ? logs[0] : null;
+
+    return {
+      id: habit.id,
+      title: habit.title,
+      streak: habit.streak || 0,
+      completedToday: todayLog ? todayLog.completed : false,
+      frequency: (habit.frequency || 'DAILY').toLowerCase() as 'daily',
+      category: habit.category,
+    };
+  } catch (error) {
+    console.error('Error updating habit:', error);
+    throw new Error('Failed to update habit');
+  }
+}
+
 export async function updateHabitStreak(habitId: string) {
   try {
     // Fetch habit with logs
