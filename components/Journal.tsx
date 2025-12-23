@@ -92,24 +92,24 @@ export const Journal: React.FC = () => {
       <div className="space-y-4 sm:space-y-6">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold">Daily Retrospective</h2>
-          <p className="text-text/70 text-xs sm:text-sm">Reflect, Learn, Optimize.</p>
+          <p className="text-text-muted text-xs sm:text-sm">Reflect, Learn, Optimize.</p>
         </div>
 
         {!submittedToday ? (
-          <form onSubmit={handleSubmit} className="bg-surface border border-surface/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-6">
+          <form onSubmit={handleSubmit} className="bg-midnight-surface border border-midnight-border rounded-xl sm:rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-6">
             
             <div className="space-y-2">
-              <label className="text-sm font-medium text-text">How was your day? ({rating}/10)</label>
+              <label className="text-sm font-medium text-text-main">How was your day? ({rating}/10)</label>
               <input 
                 type="range" 
                 min="1" 
                 max="10" 
                 value={rating} 
                 onChange={(e) => setRating(Number(e.target.value))}
-                className="w-full h-2 bg-surface/70 rounded-lg appearance-none cursor-pointer accent-primary"
+                className="w-full h-2 bg-midnight-surface/70 rounded-lg appearance-none cursor-pointer accent-mint-primary"
                 disabled={isPending}
               />
-              <div className="flex justify-between text-xs text-text/50 font-mono">
+              <div className="flex justify-between text-xs text-text-muted font-mono">
                 <span>Terrible</span>
                 <span>Average</span>
                 <span>Excellent</span>
@@ -117,13 +117,13 @@ export const Journal: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="text-sm font-medium text-text">Gratitude (Three Good Things)</label>
+              <label className="text-sm font-medium text-text-main">Gratitude (Three Good Things)</label>
               <input 
                 type="text" 
                 placeholder="1." 
                 value={gratitude1} 
                 onChange={e => setGratitude1(e.target.value)} 
-                className="w-full bg-surface border border-surface/50 rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text focus:border-primary outline-none min-h-[44px]" 
+                className="w-full bg-midnight-bg border border-midnight-border rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text-main focus:border-mint-primary outline-none min-h-[44px]" 
                 disabled={isPending}
                 required 
               />
@@ -132,7 +132,7 @@ export const Journal: React.FC = () => {
                 placeholder="2." 
                 value={gratitude2} 
                 onChange={e => setGratitude2(e.target.value)} 
-                className="w-full bg-surface border border-surface/50 rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text focus:border-primary outline-none min-h-[44px]" 
+                className="w-full bg-midnight-bg border border-midnight-border rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text-main focus:border-mint-primary outline-none min-h-[44px]" 
                 disabled={isPending}
               />
               <input 
@@ -140,18 +140,18 @@ export const Journal: React.FC = () => {
                 placeholder="3." 
                 value={gratitude3} 
                 onChange={e => setGratitude3(e.target.value)} 
-                className="w-full bg-surface border border-surface/50 rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text focus:border-primary outline-none min-h-[44px]" 
+                className="w-full bg-midnight-bg border border-midnight-border rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text-main focus:border-mint-primary outline-none min-h-[44px]" 
                 disabled={isPending}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-text">Notes & Reflections</label>
+              <label className="text-sm font-medium text-text-main">Notes & Reflections</label>
               <textarea 
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
                 placeholder="What did I learn? What can I improve tomorrow?"
-                className="w-full h-32 sm:h-36 bg-surface border border-surface/50 rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text focus:border-primary outline-none resize-none"
+                className="w-full h-32 sm:h-36 bg-midnight-bg border border-midnight-border rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text-main focus:border-mint-primary outline-none resize-none"
                 disabled={isPending}
               />
             </div>
@@ -159,54 +159,54 @@ export const Journal: React.FC = () => {
             <button 
               type="submit" 
               disabled={isPending}
-              className="w-full py-3.5 sm:py-3 bg-primary hover:bg-blue-500 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] text-sm sm:text-base"
+              className="w-full py-3.5 sm:py-3 bg-mint-primary hover:bg-teal-500 text-midnight-bg rounded-lg font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] text-sm sm:text-base"
             >
               <Save size={18} /> {isPending ? 'Saving...' : 'End Day & Save'}
             </button>
           </form>
         ) : (
-          <div className="bg-surface border border-surface/50 rounded-2xl p-12 text-center space-y-4">
-             <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-midnight-surface border border-midnight-border rounded-2xl p-12 text-center space-y-4">
+             <div className="w-16 h-16 bg-mint-primary/10 text-mint-primary rounded-full flex items-center justify-center mx-auto mb-4">
                <Star size={32} fill="currentColor" />
              </div>
-             <h3 className="text-xl font-bold text-text">Entry Saved!</h3>
-             <p className="text-text/70">Great job today. +50 XP gained.</p>
-             <button onClick={() => setSubmittedToday(false)} className="text-primary text-sm hover:underline">Add another note?</button>
+             <h3 className="text-xl font-bold text-text-main">Entry Saved!</h3>
+             <p className="text-text-muted">Great job today. +50 XP gained.</p>
+             <button onClick={() => setSubmittedToday(false)} className="text-mint-primary text-sm hover:underline">Add another note?</button>
           </div>
         )}
       </div>
 
       {/* History Feed */}
       <div className="space-y-4 sm:space-y-6">
-        <h3 className="text-lg sm:text-xl font-bold text-text">History</h3>
+        <h3 className="text-lg sm:text-xl font-bold text-text-main">History</h3>
         <div className="space-y-3 sm:space-y-4 max-h-[400px] sm:max-h-[600px] overflow-y-auto pr-2">
           {loading ? (
-            <div className="text-text/60 italic text-sm">Loading journal entries...</div>
+            <div className="text-text-muted italic text-sm">Loading journal entries...</div>
           ) : journalEntries.length === 0 ? (
-            <div className="text-text/60 italic text-sm">No journal entries yet. Start today!</div>
+            <div className="text-text-muted italic text-sm">No journal entries yet. Start today!</div>
           ) : (
             [...journalEntries].reverse().map(entry => (
               <motion.div 
                 key={entry.id}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-surface border border-surface/50 rounded-xl p-5 space-y-3"
+                className="bg-midnight-surface border border-midnight-border rounded-xl p-5 space-y-3"
               >
                 <div className="flex justify-between items-start">
-                  <span className="text-primary font-medium font-mono text-sm">{entry.date}</span>
-                  <span className="flex items-center gap-1 text-yellow-500 text-sm font-bold">
+                  <span className="text-mint-primary font-medium font-mono text-sm">{entry.date}</span>
+                  <span className="flex items-center gap-1 text-mint-primary text-sm font-bold">
                     {entry.rating}/10 <Star size={12} fill="currentColor" />
                   </span>
                 </div>
                 
                 {entry.gratitude.length > 0 && (
-                  <ul className="text-sm text-text/70 list-disc list-inside space-y-1 bg-obsidian/50 p-3 rounded-lg">
+                  <ul className="text-sm text-text-muted list-disc list-inside space-y-1 bg-midnight-bg/50 p-3 rounded-lg">
                     {entry.gratitude.map((g, i) => <li key={i}>{g}</li>)}
                   </ul>
                 )}
                 
                 {entry.notes && (
-                  <p className="text-sm text-text leading-relaxed border-l-2 border-surface/50 pl-3">
+                  <p className="text-sm text-text-main leading-relaxed border-l-2 border-midnight-border pl-3">
                     {entry.notes}
                   </p>
                 )}

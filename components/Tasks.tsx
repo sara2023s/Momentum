@@ -169,19 +169,19 @@ export const Tasks: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold">Task Command</h2>
-          <p className="text-text/70 text-xs sm:text-sm">Capture, prioritize, and execute.</p>
+          <p className="text-text-muted text-xs sm:text-sm">Capture, prioritize, and execute.</p>
         </div>
         
-        <div className="flex p-1 bg-surface rounded-lg border border-surface/50 w-full sm:w-auto">
+        <div className="flex p-1 bg-midnight-surface rounded-lg border border-midnight-border w-full sm:w-auto">
           <button 
             onClick={() => setActiveTab('my_day')}
-            className={`flex-1 sm:flex-none px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all min-h-[44px] ${activeTab === 'my_day' ? 'bg-surface/70 text-text shadow-sm' : 'text-text/60 hover:text-text'}`}
+            className={`flex-1 sm:flex-none px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all min-h-[44px] ${activeTab === 'my_day' ? 'bg-midnight-surface/70 text-text-main shadow-sm' : 'text-text-muted hover:text-text-main'}`}
           >
             My Day
           </button>
           <button 
             onClick={() => setActiveTab('backlog')}
-            className={`flex-1 sm:flex-none px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all min-h-[44px] ${activeTab === 'backlog' ? 'bg-surface/70 text-text shadow-sm' : 'text-text/60 hover:text-text'}`}
+            className={`flex-1 sm:flex-none px-4 py-2.5 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all min-h-[44px] ${activeTab === 'backlog' ? 'bg-midnight-surface/70 text-text-main shadow-sm' : 'text-text-muted hover:text-text-main'}`}
           >
             Backlog
           </button>
@@ -190,7 +190,7 @@ export const Tasks: React.FC = () => {
 
       {activeTab === 'my_day' && (
         <div className="flex justify-end">
-           <button onClick={handleMigrate} className="text-xs text-text/60 hover:text-primary flex items-center gap-1 transition-colors">
+           <button onClick={handleMigrate} className="text-xs text-text-muted hover:text-mint-primary flex items-center gap-1 transition-colors">
               Migrate unfinished to Backlog <ArrowRight size={12} />
            </button>
         </div>
@@ -201,33 +201,33 @@ export const Tasks: React.FC = () => {
         <ContributionHeatmap 
           data={heatmapData} 
           title="Task Completion Flow" 
-          color="#3B82F6"
+          color="#2DD4BF"
         />
       )}
 
-      <div className="flex-1 bg-surface/50 border border-surface/50 rounded-xl overflow-hidden flex flex-col">
-        <form onSubmit={handleAdd} className="p-3 sm:p-4 border-b border-surface/50 bg-surface flex items-center gap-2 sm:gap-3">
-           <Plus size={18} className="sm:w-5 sm:h-5 text-text/60 flex-shrink-0" />
+      <div className="flex-1 bg-midnight-surface/50 border border-midnight-border rounded-xl overflow-hidden flex flex-col">
+        <form onSubmit={handleAdd} className="p-3 sm:p-4 border-b border-midnight-border bg-midnight-surface flex items-center gap-2 sm:gap-3">
+           <Plus size={18} className="sm:w-5 sm:h-5 text-text-muted flex-shrink-0" />
            <input 
               type="text" 
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               placeholder={activeTab === 'my_day' ? "What needs to be done today?" : "Add to your backlog..."}
-              className="bg-transparent flex-1 outline-none text-text placeholder-text/50 text-sm sm:text-base min-h-[44px]"
+              className="bg-transparent flex-1 outline-none text-text-main placeholder-text-muted text-sm sm:text-base min-h-[44px]"
               disabled={isPending}
            />
         </form>
 
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {loading ? (
-            <div className="h-full flex flex-col items-center justify-center text-text/50 gap-2">
+            <div className="h-full flex flex-col items-center justify-center text-text-muted gap-2">
               <Calendar size={48} strokeWidth={1} />
               <p>Loading tasks...</p>
             </div>
           ) : (
             <AnimatePresence mode="popLayout">
               {filteredTasks.length === 0 && (
-                <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="h-full flex flex-col items-center justify-center text-text/50 gap-2">
+                <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="h-full flex flex-col items-center justify-center text-text-muted gap-2">
                   <Calendar size={48} strokeWidth={1} />
                   <p>No tasks found.</p>
                 </motion.div>
@@ -248,17 +248,17 @@ export const Tasks: React.FC = () => {
                   initial={isNewItem ? { opacity: 0, y: 10 } : false}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="group flex items-center gap-3 p-3 rounded-lg hover:bg-surface/50 transition-colors"
+                  className="group flex items-center gap-3 p-3 rounded-lg hover:bg-midnight-surface/50 transition-colors"
                 >
                   <button 
                     onClick={() => handleToggle(task.id)}
                     disabled={isPending}
-                    className={`transition-colors disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center ${task.completed ? 'text-emerald-500' : 'text-text/50 hover:text-text/70'}`}
+                    className={`transition-colors disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center ${task.completed ? 'text-mint-primary' : 'text-text-muted hover:text-text-main'}`}
                   >
-                    {task.completed ? <CheckCircle2 size={22} className="fill-emerald-500/10" /> : <Circle size={22} />}
+                    {task.completed ? <CheckCircle2 size={22} className="fill-mint-primary/10" /> : <Circle size={22} />}
                   </button>
                   
-                  <span className={`flex-1 text-sm sm:text-base ${task.completed ? 'text-text/60 line-through' : 'text-text'}`}>
+                  <span className={`flex-1 text-sm sm:text-base ${task.completed ? 'text-text-muted line-through' : 'text-text-main'}`}>
                     {task.title}
                   </span>
 
@@ -266,7 +266,7 @@ export const Tasks: React.FC = () => {
                     <button 
                       onClick={() => handleMove(task.id, activeTab === 'my_day' ? 'backlog' : 'my_day')}
                       disabled={isPending}
-                      className="p-2 text-text/60 hover:text-primary hover:bg-surface/70 rounded disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      className="p-2 text-text-muted hover:text-mint-primary hover:bg-midnight-surface/70 rounded disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center"
                       title={activeTab === 'my_day' ? "Move to Backlog" : "Move to My Day"}
                     >
                       <ArrowRight size={16} />
@@ -274,7 +274,7 @@ export const Tasks: React.FC = () => {
                     <button 
                       onClick={() => handleDelete(task.id)}
                       disabled={isPending}
-                      className="p-2 text-text/60 hover:text-red-400 hover:bg-surface/70 rounded disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      className="p-2 text-text-muted hover:text-red-400 hover:bg-midnight-surface/70 rounded disabled:opacity-50 min-h-[44px] min-w-[44px] flex items-center justify-center"
                     >
                       <Trash2 size={16} />
                     </button>
