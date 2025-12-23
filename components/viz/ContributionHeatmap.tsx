@@ -156,9 +156,9 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
                   style={{
                     width: '11px',
                     height: '11px',
-                    backgroundColor: square.count > 0 ? color : '#172554',
+                    backgroundColor: square.count > 0 ? color : '#0F172A', // Use obsidian color for empty squares
                     opacity: square.count > 0 ? opacity : 1,
-                    border: square.count === 0 ? '1px solid rgba(23, 37, 84, 0.5)' : 'none'
+                    border: square.count === 0 ? '1px solid rgba(51, 65, 85, 0.4)' : 'none' // Subtle border for visibility
                   }}
                   onMouseEnter={(e) => handleSquareHover(e, square.date, square.count)}
                   onMouseLeave={handleSquareLeave}
