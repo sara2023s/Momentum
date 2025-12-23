@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { Navbar } from './Navbar';
 
 export const MarketingLanding: React.FC = () => {
   const { signInWithGoogle, user: authUser } = useAuth();
@@ -23,13 +24,9 @@ export const MarketingLanding: React.FC = () => {
   const [error, setError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  // Don't redirect here - let App.tsx handle it to avoid conflicts
-
   const handleGetStarted = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    console.log('Button clicked!', { authUser, isLoading });
     
     try {
       setError(null);
@@ -37,82 +34,24 @@ export const MarketingLanding: React.FC = () => {
       
       // If already authenticated, just navigate
       if (authUser) {
-        console.log('User already authenticated, navigating to /app');
         navigate('/app');
         setIsLoading(false);
         return;
       }
       
-      // Otherwise, trigger OAuth (will redirect to Google, then back to #/app)
-      console.log('Starting OAuth flow...');
+      // Otherwise, trigger OAuth
       await signInWithGoogle();
-      console.log('OAuth flow initiated, redirecting to Google...');
-      // Note: OAuth redirects away from the page, so navigation happens after redirect back
     } catch (err: any) {
       console.error('OAuth error:', err);
       const errorMessage = err?.message || err?.error_description || 'Failed to sign in. Please check your Supabase configuration and try again.';
       setError(errorMessage);
       setIsLoading(false);
-      
-      // Show more detailed error in console for debugging
-      if (err?.code) {
-        console.error('Error code:', err.code);
-      }
-      if (err?.status) {
-        console.error('Error status:', err.status);
-      }
     }
   };
 
   return (
     <div className="min-h-screen bg-midnight-bg text-text-main">
-      {/* Navigation */}
-      <nav className="border-b border-midnight-border bg-midnight-bg/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-mint-primary to-teal-500 flex items-center justify-center shadow-lg shadow-mint-primary/20">
-                <Zap size={18} className="text-midnight-bg fill-midnight-bg" />
-              </div>
-              <span className="text-xl font-bold tracking-tight font-mono">Momentum</span>
-            </div>
-            
-            {/* Navigation Links - Centered and properly aligned */}
-            <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 flex-1">
-              <Link 
-                to="/pricing" 
-                className="text-text-muted hover:text-text-main transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
-              >
-                Pricing
-              </Link>
-              <Link 
-                to="/methodology" 
-                className="text-text-muted hover:text-text-main transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
-              >
-                Methodology
-              </Link>
-              <Link 
-                to="/about" 
-                className="text-text-muted hover:text-text-main transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
-              >
-                About
-              </Link>
-            </div>
-            
-            {/* CTA Button */}
-            <div className="flex items-center flex-shrink-0">
-              <button
-                onClick={handleGetStarted}
-                disabled={isLoading}
-                className="px-4 py-2 bg-mint-primary hover:bg-teal-500 text-midnight-bg rounded-lg font-medium transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-              >
-                {isLoading ? 'Redirecting...' : 'Get Started'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
@@ -526,7 +465,7 @@ export const MarketingLanding: React.FC = () => {
               <h4 className="font-semibold mb-4 text-text-main">Product</h4>
               <ul className="space-y-2 text-sm text-text-muted">
                 <li><Link to="/pricing" className="hover:text-mint-primary transition-colors">Pricing</Link></li>
-                <li><Link to="/methodology" className="hover:text-mint-primary transition-colors">Methodology</Link></li>
+                <li><Link to="/how-this-came-to-be" className="hover:text-mint-primary transition-colors">How This Came to Be</Link></li>
                 <li><Link to="/changelog" className="hover:text-mint-primary transition-colors">Changelog</Link></li>
               </ul>
             </div>

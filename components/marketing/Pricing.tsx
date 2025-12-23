@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Check, Zap, Crown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { Navbar } from './Navbar';
 
 export const Pricing: React.FC = () => {
   const { signInWithGoogle, user: authUser } = useAuth();
@@ -50,37 +51,7 @@ export const Pricing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-midnight-bg text-text-main">
-      {/* Navigation */}
-      <nav className="border-b border-midnight-border bg-midnight-bg/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-mint-primary to-teal-500 flex items-center justify-center shadow-lg shadow-mint-primary/20">
-                <Zap size={18} className="text-midnight-bg fill-midnight-bg" />
-              </div>
-              <span className="text-xl font-bold tracking-tight font-mono">Momentum</span>
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link to="/pricing" className="text-text-muted hover:text-text-main transition-colors text-sm">
-                Pricing
-              </Link>
-              <Link to="/methodology" className="text-text-muted hover:text-text-main transition-colors text-sm">
-                Methodology
-              </Link>
-              <Link to="/about" className="text-text-muted hover:text-text-main transition-colors text-sm">
-                About
-              </Link>
-              <button
-                onClick={handleGetStarted}
-                disabled={isLoading}
-                className="px-4 py-2 bg-mint-primary hover:bg-teal-500 text-midnight-bg rounded-lg font-medium transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Redirecting...' : 'Get Started'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="py-20 sm:py-28">
@@ -245,7 +216,7 @@ export const Pricing: React.FC = () => {
               <h4 className="font-semibold mb-4 text-text-main">Product</h4>
               <ul className="space-y-2 text-sm text-text-muted">
                 <li><Link to="/pricing" className="hover:text-mint-primary transition-colors">Pricing</Link></li>
-                <li><Link to="/methodology" className="hover:text-mint-primary transition-colors">Methodology</Link></li>
+                <li><Link to="/how-this-came-to-be" className="hover:text-mint-primary transition-colors">How This Came to Be</Link></li>
                 <li><Link to="/changelog" className="hover:text-mint-primary transition-colors">Changelog</Link></li>
               </ul>
             </div>

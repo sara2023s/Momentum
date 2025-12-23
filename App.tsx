@@ -10,6 +10,7 @@ import { Journal } from './components/Journal';
 import { MarketingLanding } from './components/marketing/Landing';
 import { Pricing } from './components/marketing/Pricing';
 import { About } from './components/marketing/About';
+import { HowThisCameToBe } from './components/marketing/HowThisCameToBe';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { getUser } from './actions/user';
 
@@ -151,6 +152,7 @@ const AppContent: React.FC = () => {
         {/* Marketing Routes - No Auth Required */}
         <Route path="/" element={<MarketingLanding />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/how-this-came-to-be" element={<HowThisCameToBe />} />
         <Route path="/about" element={<About />} />
         
         {/* App Routes - Auth Required */}
