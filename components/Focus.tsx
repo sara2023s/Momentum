@@ -210,7 +210,7 @@ export const Focus: React.FC = () => {
               className={`h-12 w-12 sm:h-14 sm:w-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg active:scale-95 touch-manipulation ${
                 isActive 
                   ? 'bg-surface text-text/80 hover:bg-surface/70 border border-surface/50' 
-                  : 'bg-primary text-white hover:bg-blue-500 border border-mint-primary'
+                  : 'bg-primary text-white hover:bg-blue-500 border border-primary'
               }`}
             >
               {isActive ? <Pause size={20} className="sm:w-6 sm:h-6" fill="currentColor" /> : <Play size={20} className="sm:w-6 sm:h-6 ml-0.5" fill="currentColor" />}
@@ -290,7 +290,7 @@ export const Focus: React.FC = () => {
                 disabled={isActive}
                 className={`px-4 sm:px-5 py-2.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 touch-manipulation min-h-[44px] min-w-[44px] ${
                   customMinutes === minutes
-                    ? 'bg-primary text-white border border-mint-primary'
+                    ? 'bg-primary text-white border border-primary'
                     : 'bg-obsidian border border-surface/50 text-text/70 hover:bg-surface hover:text-text hover:border-surface/50/70'
                 } ${isActive ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'}`}
               >
