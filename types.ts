@@ -9,7 +9,8 @@ export interface Habit {
   title: string;
   streak: number;
   completedToday: boolean;
-  frequency: 'daily'; 
+  frequency: 'daily';
+  category?: string | null;
 }
 
 export interface Task {

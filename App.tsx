@@ -1,16 +1,20 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AppState, AppContextType, Habit, Task, JournalEntry, FocusSession } from './types';
-import { INITIAL_STATE, LEVELS } from './constants';
+import { User } from './types';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
 import { Habits } from './components/Habits';
 import { Tasks } from './components/Tasks';
 import { Focus } from './components/Focus';
 import { Journal } from './components/Journal';
+import { MarketingLanding } from './components/marketing/Landing';
+import { Pricing } from './components/marketing/Pricing';
+import { About } from './components/marketing/About';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { getUser } from './actions/user';
 
-// Context Definition
-const AppContext = createContext<AppContextType | undefined>(undefined);
+// Context Definition - Only for user data now
+const AppContext = createContext<{ user: User; refreshUser: () => Promise<void> } | undefined>(undefined);
 
 export const useApp = () => {
   const context = useContext(AppContext);
@@ -18,174 +22,169 @@ export const useApp = () => {
   return context;
 };
 
-const App: React.FC = () => {
-  // Load initial state from local storage or fallback
-  const [state, setState] = useState<AppState>(() => {
-    const saved = localStorage.getItem('momentum_app_state');
-    return saved ? JSON.parse(saved) : INITIAL_STATE;
-  });
-
-  // Persist state on change
-  useEffect(() => {
-    localStorage.setItem('momentum_app_state', JSON.stringify(state));
-  }, [state]);
-
-  // Actions
-  const addXp = (amount: number) => {
-    setState(prev => {
-      const newXp = prev.user.xp + amount;
-      // Simple level calculation
-      let newLevel = prev.user.level;
-      if (LEVELS[newLevel] && newXp >= LEVELS[newLevel]) {
-        newLevel++;
-        // Could trigger level up animation state here
+const AppContent: React.FC = () => {
+  const { user: authUser, loading: authLoading } = useAuth();
+  const [user, setUser] = useState<User>({ name: 'User', xp: 0, level: 1 });
+  const [loading, setLoading] = useState(true);
+  const [hashCleaned, setHashCleaned] = useState(false);
+  const fetchingUserRef = useRef(false);
+  
+  // Clean up OAuth hash immediately on mount (before router tries to match)
+  React.useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes('access_token')) {
+      // Extract route before access_token
+      let cleanHash = hash.split('#access_token')[0].split('?access_token')[0];
+      if (!cleanHash || cleanHash === '#' || cleanHash === '') {
+        cleanHash = '#/app';
       }
-      return {
-        ...prev,
-        user: { ...prev.user, xp: newXp, level: newLevel }
-      };
-    });
-  };
-
-  const addHabit = (title: string) => {
-    const newHabit: Habit = {
-      id: Date.now().toString(),
-      title,
-      streak: 0,
-      completedToday: false,
-      frequency: 'daily'
-    };
-    setState(prev => ({ ...prev, habits: [...prev.habits, newHabit] }));
-  };
-
-  const toggleHabit = (id: string) => {
-    setState(prev => {
-      const habit = prev.habits.find(h => h.id === id);
-      if (!habit) return prev;
-
-      if (!habit.completedToday) {
-        addXp(10); // Reward
-        return {
-          ...prev,
-          habits: prev.habits.map(h => 
-            h.id === id ? { ...h, completedToday: true, streak: h.streak + 1 } : h
-          )
-        };
-      } else {
-        // Toggle off (optional, remove XP logic usually prevents abuse, but for MVP keep simple)
-        return {
-          ...prev,
-          habits: prev.habits.map(h => 
-            h.id === id ? { ...h, completedToday: false, streak: Math.max(0, h.streak - 1) } : h
-          )
-        };
+      if (cleanHash !== hash) {
+        console.log('Cleaning OAuth hash immediately:', cleanHash);
+        window.history.replaceState(null, '', cleanHash);
+        window.location.hash = cleanHash;
       }
-    });
+    }
+    setHashCleaned(true);
+  }, []);
+
+  const refreshUser = async () => {
+    if (!authUser) return;
+    try {
+      const userData = await getUser(authUser.id);
+      setUser(userData);
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+    }
   };
 
-  const addTask = (title: string, type: 'my_day' | 'backlog') => {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title,
-      completed: false,
-      type,
-      createdAt: Date.now()
-    };
-    setState(prev => ({ ...prev, tasks: [...prev.tasks, newTask] }));
-  };
-
-  const toggleTask = (id: string) => {
-    setState(prev => ({
-      ...prev,
-      tasks: prev.tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t)
-    }));
-  };
-
-  const moveTask = (id: string, target: 'my_day' | 'backlog') => {
-    setState(prev => ({
-      ...prev,
-      tasks: prev.tasks.map(t => t.id === id ? { ...t, type: target } : t)
-    }));
-  };
-
-  const deleteTask = (id: string) => {
-    setState(prev => ({
-      ...prev,
-      tasks: prev.tasks.filter(t => t.id !== id)
-    }));
-  };
-
-  const addFocusSession = (duration: number) => {
-    const newSession: FocusSession = {
-      id: Date.now().toString(),
-      duration,
-      timestamp: Date.now()
-    };
-    setState(prev => ({ ...prev, focusSessions: [...prev.focusSessions, newSession] }));
-    addXp(duration * 2); // 2 XP per minute focused
-  };
-
-  const addJournalEntry = (entry: Omit<JournalEntry, 'id'>) => {
-    const newEntry: JournalEntry = { ...entry, id: Date.now().toString() };
-    setState(prev => ({ ...prev, journalEntries: [...prev.journalEntries, newEntry] }));
-    addXp(50);
-  };
-
-  // Reset daily stats if it's a new day (Primitive check)
   useEffect(() => {
-    const lastLogin = localStorage.getItem('last_login_date');
-    const today = new Date().toLocaleDateString();
+    console.log('User fetch effect - authLoading:', authLoading, 'authUser:', !!authUser, 'loading:', loading, 'fetchingUserRef:', fetchingUserRef.current);
     
-    if (lastLogin !== today) {
-      // Reset daily habit completion
-      setState(prev => ({
-        ...prev,
-        habits: prev.habits.map(h => {
-           // If habit wasn't completed yesterday, reset streak? 
-           // Complex streak logic omitted for MVP simplicity, just reset 'completedToday'
-           return { ...h, completedToday: false };
-        })
-      }));
-      localStorage.setItem('last_login_date', today);
+    if (!authLoading && authUser && !fetchingUserRef.current) {
+      // Check if we already have real user data (not the default 'User')
+      if (user.name !== 'User' || user.xp > 0 || user.level > 1) {
+        // Already have user data, just ensure loading is false
+        console.log('User already has data, setting loading to false');
+        setLoading(false);
+        return;
+      }
+      
+      fetchingUserRef.current = true;
+      const fetchUser = async () => {
+        try {
+          console.log('Fetching user data for:', authUser.id);
+          const userData = await getUser(authUser.id);
+          console.log('User data fetched successfully:', userData);
+          setUser(userData);
+          setLoading(false);
+        } catch (error) {
+          console.error('Failed to fetch user:', error);
+          // Set a default user so the app doesn't crash
+          setUser({ 
+            name: authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || 'User', 
+            xp: 0, 
+            level: 1 
+          });
+          setLoading(false);
+        } finally {
+          fetchingUserRef.current = false;
+        }
+      };
+      fetchUser();
+    } else if (!authLoading && !authUser) {
+      setLoading(false);
+      fetchingUserRef.current = false; // Reset when user logs out
+    }
+  }, [authUser, authLoading]);
+
+  // Redirect to /app if authenticated and on marketing page
+  useEffect(() => {
+    if (!authLoading && authUser) {
+      const currentHash = window.location.hash;
+      console.log('Auth check - current hash:', currentHash, 'authUser:', !!authUser);
+      
+      // If on marketing pages (/, /pricing, /about) and authenticated, redirect to app
+      // But don't redirect if already on /app or a sub-route
+      if (currentHash === '#/' || currentHash === '#/pricing' || currentHash === '#/about' || currentHash === '' || !currentHash) {
+        console.log('Redirecting authenticated user to /app from:', currentHash);
+        // Use navigate instead of window.location.hash for better React Router integration
+        window.location.hash = '#/app';
+      }
+    }
+  }, [authUser, authLoading]);
+
+  // Handle OAuth callback errors
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes('error=')) {
+      const errorMatch = hash.match(/error=([^&]+)/);
+      const errorDescMatch = hash.match(/error_description=([^&]+)/);
+      if (errorMatch) {
+        console.error('OAuth error in URL:', decodeURIComponent(errorMatch[1]), errorDescMatch ? decodeURIComponent(errorDescMatch[1]) : '');
+        // Clear the error from URL and redirect to home
+        window.location.hash = '#/';
+      }
     }
   }, []);
 
-  const resetDay = () => {
-    // Manually trigger day reset for testing
-    setState(prev => ({
-       ...prev,
-       habits: prev.habits.map(h => ({ ...h, completedToday: false }))
-    }));
-  };
+  // Wait for hash cleanup before rendering router
+  if (!hashCleaned || authLoading || (authUser && loading)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-midnight-bg text-text-main">
+        <div className="text-text-muted">Loading...</div>
+      </div>
+    );
+  }
 
-  const contextValue: AppContextType = {
-    ...state,
-    addHabit,
-    toggleHabit,
-    addTask,
-    toggleTask,
-    moveTask,
-    deleteTask,
-    addFocusSession,
-    addJournalEntry,
-    resetDay
-  };
+  // Clean hash one more time before rendering router
+  const currentHash = window.location.hash;
+  if (currentHash.includes('access_token')) {
+    const cleanHash = currentHash.split('#access_token')[0].split('?access_token')[0] || '#/app';
+    if (cleanHash !== currentHash) {
+      window.history.replaceState(null, '', cleanHash);
+    }
+  }
 
   return (
-    <AppContext.Provider value={contextValue}>
-      <HashRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/habits" element={<Habits />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/focus" element={<Focus />} />
-            <Route path="/journal" element={<Journal />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Layout>
-      </HashRouter>
-    </AppContext.Provider>
+    <HashRouter>
+      <Routes>
+        {/* Marketing Routes - No Auth Required */}
+        <Route path="/" element={<MarketingLanding />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/about" element={<About />} />
+        
+        {/* App Routes - Auth Required */}
+        <Route path="/app/*" element={
+          authUser ? (
+            <AppContext.Provider value={{ user, refreshUser }}>
+              <Layout>
+                <Routes>
+                  <Route index element={<Dashboard />} />
+                  <Route path="habits" element={<Habits />} />
+                  <Route path="tasks" element={<Tasks />} />
+                  <Route path="focus" element={<Focus />} />
+                  <Route path="journal" element={<Journal />} />
+                  <Route path="*" element={<Navigate to="/app" replace />} />
+                </Routes>
+              </Layout>
+            </AppContext.Provider>
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
+        
+        {/* Catch all - redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </HashRouter>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 

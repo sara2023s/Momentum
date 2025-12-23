@@ -1,0 +1,87 @@
+// prisma/schema.prisma
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id // Supabase auth UUID
+  email         String    @unique
+  name          String?
+  createdAt     DateTime  @default(now())
+  
+  // Gamification
+  level         Int       @default(1)
+  currentXP     Int       @default(0)
+  
+  // Relations
+  habits        Habit[]
+  tasks         Task[]
+  focusSessions FocusSession[]
+  dailyRetros   DailyRetro[]
+}
+
+model Habit {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  category    String?   // "Health", "Code", "Mindset"
+  frequency   String   @default("DAILY")
+  streak      Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs        HabitLog[]
+}
+
+model HabitLog {
+  id          String   @id @default(cuid())
+  habitId     String
+  date        DateTime // YYYY-MM-DD
+  completed   Boolean  @default(true)
+  
+  habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  
+  @@unique([habitId, date])
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  isCompleted Boolean  @default(false)
+  type        String   // "MY_DAY", "PLANNED", "BACKLOG"
+  dueDate     DateTime?
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FocusSession {
+  id          String   @id @default(cuid())
+  userId      String
+  duration    Int      // In minutes
+  startedAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DailyRetro {
+  id             String   @id @default(cuid())
+  userId         String
+  date           DateTime @default(now())
+  rating         Int
+  goodThing1     String?
+  goodThing2     String?
+  goodThing3     String?
+  notes          String?  @db.Text
+  
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, date])
+}

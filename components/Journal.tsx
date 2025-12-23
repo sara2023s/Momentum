@@ -1,63 +1,115 @@
-import React, { useState } from 'react';
-import { useApp } from '../App';
+import React, { useState, useEffect, useTransition } from 'react';
 import { motion } from 'framer-motion';
 import { Save, Star } from 'lucide-react';
+import { getDailyRetros, createDailyRetro } from '../actions/dailyRetro';
+import { addXP } from '../actions/user';
+import { useAuth } from '../contexts/AuthContext';
+import { useApp } from '../App';
+import type { JournalEntry } from '../types';
 
 export const Journal: React.FC = () => {
-  const { journalEntries, addJournalEntry } = useApp();
+  const { user: authUser } = useAuth();
+  const { refreshUser } = useApp();
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
   const [rating, setRating] = useState(5);
   const [gratitude1, setGratitude1] = useState('');
   const [gratitude2, setGratitude2] = useState('');
   const [gratitude3, setGratitude3] = useState('');
   const [notes, setNotes] = useState('');
   const [submittedToday, setSubmittedToday] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [loading, setLoading] = useState(true);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (!authUser) return;
+    
+    const fetchRetros = async () => {
+      try {
+        const data = await getDailyRetros(authUser.id);
+        setJournalEntries(data);
+        
+        // Check if already submitted today
+        const today = new Date().toLocaleDateString();
+        const todayEntry = data.find((e) => e.date === today);
+        if (todayEntry) {
+          setSubmittedToday(true);
+        }
+      } catch (error) {
+        console.error('Failed to fetch journal entries:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRetros();
+  }, [authUser]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const today = new Date().toLocaleDateString();
     
-    // Simple check to prevent multi-submit for MVP demo
+    // Check if already submitted today
     if (journalEntries.some(j => j.date === today)) {
-        alert("You've already journaled today!");
-        return;
+      alert("You've already journaled today!");
+      return;
     }
 
-    addJournalEntry({
-      date: today,
+    const entryData = {
       rating,
-      gratitude: [gratitude1, gratitude2, gratitude3].filter(Boolean),
-      notes
+      goodThing1: gratitude1.trim() || undefined,
+      goodThing2: gratitude2.trim() || undefined,
+      goodThing3: gratitude3.trim() || undefined,
+      notes: notes.trim() || undefined,
+    };
+
+    startTransition(async () => {
+      if (!authUser) return;
+      try {
+        const newEntry = await createDailyRetro(authUser.id, entryData);
+        setJournalEntries((prev) => [newEntry, ...prev]);
+        setSubmittedToday(true);
+        setGratitude1('');
+        setGratitude2('');
+        setGratitude3('');
+        setNotes('');
+        
+        // Add XP for completing journal entry
+        try {
+          await addXP(authUser.id, 50);
+          await refreshUser();
+        } catch (error) {
+          console.error('Failed to add XP:', error);
+        }
+      } catch (error) {
+        console.error('Failed to create journal entry:', error);
+        alert('Failed to save journal entry. Please try again.');
+      }
     });
-    setSubmittedToday(true);
-    setGratitude1('');
-    setGratitude2('');
-    setGratitude3('');
-    setNotes('');
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 h-full">
       {/* Input Form */}
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div>
-          <h2 className="text-2xl font-bold">Daily Retrospective</h2>
-          <p className="text-zinc-400 text-sm">Reflect, Learn, Optimize.</p>
+          <h2 className="text-xl sm:text-2xl font-bold">Daily Retrospective</h2>
+          <p className="text-text/70 text-xs sm:text-sm">Reflect, Learn, Optimize.</p>
         </div>
 
         {!submittedToday ? (
-          <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-surface border border-surface/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-6">
             
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-300">How was your day? ({rating}/10)</label>
+              <label className="text-sm font-medium text-text">How was your day? ({rating}/10)</label>
               <input 
                 type="range" 
                 min="1" 
                 max="10" 
                 value={rating} 
                 onChange={(e) => setRating(Number(e.target.value))}
-                className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-violet-600"
+                className="w-full h-2 bg-surface/70 rounded-lg appearance-none cursor-pointer accent-primary"
+                disabled={isPending}
               />
-              <div className="flex justify-between text-xs text-zinc-600 font-mono">
+              <div className="flex justify-between text-xs text-text/50 font-mono">
                 <span>Terrible</span>
                 <span>Average</span>
                 <span>Excellent</span>
@@ -65,72 +117,102 @@ export const Journal: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="text-sm font-medium text-zinc-300">Gratitude (Three Good Things)</label>
-              <input type="text" placeholder="1." value={gratitude1} onChange={e => setGratitude1(e.target.value)} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:border-violet-500 outline-none" required />
-              <input type="text" placeholder="2." value={gratitude2} onChange={e => setGratitude2(e.target.value)} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:border-violet-500 outline-none" />
-              <input type="text" placeholder="3." value={gratitude3} onChange={e => setGratitude3(e.target.value)} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:border-violet-500 outline-none" />
+              <label className="text-sm font-medium text-text">Gratitude (Three Good Things)</label>
+              <input 
+                type="text" 
+                placeholder="1." 
+                value={gratitude1} 
+                onChange={e => setGratitude1(e.target.value)} 
+                className="w-full bg-surface border border-surface/50 rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text focus:border-primary outline-none min-h-[44px]" 
+                disabled={isPending}
+                required 
+              />
+              <input 
+                type="text" 
+                placeholder="2." 
+                value={gratitude2} 
+                onChange={e => setGratitude2(e.target.value)} 
+                className="w-full bg-surface border border-surface/50 rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text focus:border-primary outline-none min-h-[44px]" 
+                disabled={isPending}
+              />
+              <input 
+                type="text" 
+                placeholder="3." 
+                value={gratitude3} 
+                onChange={e => setGratitude3(e.target.value)} 
+                className="w-full bg-surface border border-surface/50 rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text focus:border-primary outline-none min-h-[44px]" 
+                disabled={isPending}
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-300">Notes & Reflections</label>
+              <label className="text-sm font-medium text-text">Notes & Reflections</label>
               <textarea 
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
                 placeholder="What did I learn? What can I improve tomorrow?"
-                className="w-full h-32 bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm focus:border-violet-500 outline-none resize-none"
+                className="w-full h-32 sm:h-36 bg-surface border border-surface/50 rounded-lg p-3 sm:p-3.5 text-sm sm:text-base text-text focus:border-primary outline-none resize-none"
+                disabled={isPending}
               />
             </div>
 
-            <button type="submit" className="w-full py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
-              <Save size={18} /> End Day & Save
+            <button 
+              type="submit" 
+              disabled={isPending}
+              className="w-full py-3.5 sm:py-3 bg-primary hover:bg-blue-500 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] text-sm sm:text-base"
+            >
+              <Save size={18} /> {isPending ? 'Saving...' : 'End Day & Save'}
             </button>
           </form>
         ) : (
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-12 text-center space-y-4">
+          <div className="bg-surface border border-surface/50 rounded-2xl p-12 text-center space-y-4">
              <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
                <Star size={32} fill="currentColor" />
              </div>
-             <h3 className="text-xl font-bold text-white">Entry Saved!</h3>
-             <p className="text-zinc-400">Great job today. +50 XP gained.</p>
-             <button onClick={() => setSubmittedToday(false)} className="text-violet-400 text-sm hover:underline">Add another note?</button>
+             <h3 className="text-xl font-bold text-text">Entry Saved!</h3>
+             <p className="text-text/70">Great job today. +50 XP gained.</p>
+             <button onClick={() => setSubmittedToday(false)} className="text-primary text-sm hover:underline">Add another note?</button>
           </div>
         )}
       </div>
 
       {/* History Feed */}
-      <div className="space-y-6">
-        <h3 className="text-xl font-bold text-zinc-200">History</h3>
-        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
-          {journalEntries.length === 0 && (
-            <div className="text-zinc-500 italic text-sm">No journal entries yet. Start today!</div>
+      <div className="space-y-4 sm:space-y-6">
+        <h3 className="text-lg sm:text-xl font-bold text-text">History</h3>
+        <div className="space-y-3 sm:space-y-4 max-h-[400px] sm:max-h-[600px] overflow-y-auto pr-2">
+          {loading ? (
+            <div className="text-text/60 italic text-sm">Loading journal entries...</div>
+          ) : journalEntries.length === 0 ? (
+            <div className="text-text/60 italic text-sm">No journal entries yet. Start today!</div>
+          ) : (
+            [...journalEntries].reverse().map(entry => (
+              <motion.div 
+                key={entry.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-surface border border-surface/50 rounded-xl p-5 space-y-3"
+              >
+                <div className="flex justify-between items-start">
+                  <span className="text-primary font-medium font-mono text-sm">{entry.date}</span>
+                  <span className="flex items-center gap-1 text-yellow-500 text-sm font-bold">
+                    {entry.rating}/10 <Star size={12} fill="currentColor" />
+                  </span>
+                </div>
+                
+                {entry.gratitude.length > 0 && (
+                  <ul className="text-sm text-text/70 list-disc list-inside space-y-1 bg-obsidian/50 p-3 rounded-lg">
+                    {entry.gratitude.map((g, i) => <li key={i}>{g}</li>)}
+                  </ul>
+                )}
+                
+                {entry.notes && (
+                  <p className="text-sm text-text leading-relaxed border-l-2 border-surface/50 pl-3">
+                    {entry.notes}
+                  </p>
+                )}
+              </motion.div>
+            ))
           )}
-          {[...journalEntries].reverse().map(entry => (
-            <motion.div 
-              key={entry.id}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-3"
-            >
-              <div className="flex justify-between items-start">
-                <span className="text-violet-400 font-medium font-mono text-sm">{entry.date}</span>
-                <span className="flex items-center gap-1 text-yellow-500 text-sm font-bold">
-                  {entry.rating}/10 <Star size={12} fill="currentColor" />
-                </span>
-              </div>
-              
-              {entry.gratitude.length > 0 && (
-                <ul className="text-sm text-zinc-400 list-disc list-inside space-y-1 bg-zinc-950/50 p-3 rounded-lg">
-                  {entry.gratitude.map((g, i) => <li key={i}>{g}</li>)}
-                </ul>
-              )}
-              
-              {entry.notes && (
-                <p className="text-sm text-zinc-300 leading-relaxed border-l-2 border-zinc-700 pl-3">
-                  {entry.notes}
-                </p>
-              )}
-            </motion.div>
-          ))}
         </div>
       </div>
     </div>
