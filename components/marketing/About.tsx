@@ -32,8 +32,8 @@ export const About: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="md:col-span-1 flex flex-col items-center"
             >
-              <div className="w-32 h-32 rounded-full bg-gradient-to-tr from-mint-primary to-teal-500 flex items-center justify-center mb-6 shadow-lg shadow-primary/20">
-                <Code size={48} className="text-midnight-bg" />
+              <div className="w-32 h-32 rounded-full bg-gradient-to-tr from-primary to-blue-400 flex items-center justify-center mb-6 shadow-lg shadow-primary/20">
+                <Code size={48} className="text-white" />
               </div>
               <h2 className="text-2xl font-bold mb-2">Sara</h2>
               <p className="text-text/70 text-center mb-4">Developer & Creator</p>
@@ -41,7 +41,7 @@ export const About: React.FC = () => {
                 href="https://buildwithsds.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-mint-primary/20 rounded-lg text-primary hover:bg-primary/20 transition-colors text-sm font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-lg text-primary hover:bg-primary/20 transition-colors text-sm font-medium"
               >
                 View Portfolio
                 <ExternalLink size={16} />
@@ -144,8 +144,8 @@ export const About: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-mint-primary to-teal-500 flex items-center justify-center">
-                  <Zap size={14} className="text-midnight-bg fill-midnight-bg" />
+                <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-primary to-blue-400 flex items-center justify-center">
+                  <Zap size={14} className="text-white fill-midnight-bg" />
                 </div>
                 <span className="text-lg font-bold font-mono">Momentum</span>
               </div>

@@ -124,7 +124,7 @@ export const Pricing: React.FC = () => {
             >
               {/* Most Popular Badge */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                <span className="bg-primary text-midnight-bg px-4 py-1.5 rounded-full text-xs font-semibold font-mono shadow-lg">
+                <span className="bg-primary text-white px-4 py-1.5 rounded-full text-xs font-semibold font-mono shadow-lg">
                   Most Popular
                 </span>
               </div>
@@ -163,7 +163,7 @@ export const Pricing: React.FC = () => {
               <button
                 onClick={handleGetStarted}
                 disabled={isLoading}
-                className="w-full py-3 bg-primary hover:bg-teal-500 text-midnight-bg rounded-lg font-semibold transition-all shadow-lg shadow-mint-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-primary hover:bg-blue-500 text-white rounded-lg font-semibold transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Redirecting...' : 'Start Pro Trial'}
               </button>
@@ -204,7 +204,7 @@ export const Pricing: React.FC = () => {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-mint-primary to-teal-500 flex items-center justify-center">
-                  <Zap size={14} className="text-midnight-bg fill-midnight-bg" />
+                  <Zap size={14} className="text-white fill-midnight-bg" />
                 </div>
                 <span className="text-lg font-bold font-mono">Momentum</span>
               </div>

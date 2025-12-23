@@ -35,7 +35,7 @@ export const HowThisCameToBe: React.FC = () => {
               className="bg-surface border border-surface/50 rounded-xl p-6 sm:p-8"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-mint-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Lightbulb size={20} className="text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold">The Problem</h2>
@@ -56,7 +56,7 @@ export const HowThisCameToBe: React.FC = () => {
               className="bg-surface border border-surface/50 rounded-xl p-6 sm:p-8"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-mint-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Zap size={20} className="text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold">The Realization</h2>
@@ -77,7 +77,7 @@ export const HowThisCameToBe: React.FC = () => {
               className="bg-surface border border-surface/50 rounded-xl p-6 sm:p-8"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-mint-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Target size={20} className="text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold">The Vision</h2>
@@ -105,7 +105,7 @@ export const HowThisCameToBe: React.FC = () => {
               className="bg-surface border border-surface/50 rounded-xl p-6 sm:p-8"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-mint-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Code size={20} className="text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold">The Build</h2>
@@ -126,7 +126,7 @@ export const HowThisCameToBe: React.FC = () => {
               className="bg-surface border border-surface/50 rounded-xl p-6 sm:p-8"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-mint-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Rocket size={20} className="text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold">The Future</h2>
