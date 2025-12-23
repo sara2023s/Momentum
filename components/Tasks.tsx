@@ -201,7 +201,7 @@ export const Tasks: React.FC = () => {
         <ContributionHeatmap 
           data={heatmapData} 
           title="Task Completion Flow" 
-          color="#3B82F6"
+          color="#10B981"
         />
       )}
 

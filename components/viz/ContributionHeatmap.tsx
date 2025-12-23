@@ -20,7 +20,7 @@ interface ContributionHeatmapProps {
 export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({ 
   data, 
   title, 
-  color = '#3B82F6' // Default primary blue
+  color = '#10B981' // Default emerald green for better contrast
 }) => {
   const [tooltip, setTooltip] = useState<{ date: string; count: number; x: number; y: number } | null>(null);
 

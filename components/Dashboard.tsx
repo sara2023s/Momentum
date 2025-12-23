@@ -262,7 +262,7 @@ export const Dashboard: React.FC = () => {
         <ContributionHeatmap 
           data={overallMomentumData} 
           title="Overall Momentum" 
-          color="#3B82F6"
+          color="#10B981"
         />
       )}
     </>

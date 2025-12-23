@@ -137,7 +137,7 @@ export const Habits: React.FC = () => {
         <ContributionHeatmap 
           data={heatmapData} 
           title="Habit Consistency" 
-          color="#3B82F6"
+          color="#10B981"
         />
       )}
 
