@@ -76,23 +76,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
-      // Get the production URL from environment variable, or use current origin
-      // In Vercel, VITE_APP_URL should be set to the production domain
-      const getRedirectUrl = () => {
-        // Check for Vite env var first (client-side)
-        if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_APP_URL) {
-          return `${import.meta.env.VITE_APP_URL}#/app`;
-        }
-        // Check for process.env (Node.js/SSR)
-        if (typeof process !== 'undefined' && process.env?.VITE_APP_URL) {
-          return `${process.env.VITE_APP_URL}#/app`;
-        }
-        // Fallback to current origin (works in dev and if env var not set)
-        return `${window.location.origin}${window.location.pathname}#/app`;
-      };
+      // Always use the current origin - this will be correct in both dev and production
+      // When running in production, window.location.origin will be the production URL
+      // When running in dev, it will be localhost (which is correct for dev)
+      const currentOrigin = window.location.origin;
+      const currentPath = window.location.pathname || '';
       
-      const redirectUrl = getRedirectUrl();
-      console.log('Initiating OAuth with redirect URL:', redirectUrl);
+      // Build the redirect URL - use hash router format
+      // Remove any trailing slashes and ensure we have the hash route
+      const baseUrl = `${currentOrigin}${currentPath}`.replace(/\/$/, '');
+      const redirectUrl = `${baseUrl}#/app`;
+      
+      console.log('=== OAuth Configuration ===');
+      console.log('Current origin:', currentOrigin);
+      console.log('Current pathname:', currentPath);
+      console.log('Full redirect URL:', redirectUrl);
+      console.log('Window location:', window.location.href);
+      
+      // IMPORTANT: Make sure this redirect URL is whitelisted in:
+      // 1. Supabase Dashboard > Authentication > URL Configuration > Redirect URLs
+      // 2. Google Cloud Console > OAuth 2.0 Client > Authorized redirect URIs
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -112,7 +115,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // OAuth will redirect away, so we don't need to do anything else here
       // The redirect happens automatically via Supabase
-      console.log('OAuth redirect initiated');
+      console.log('OAuth redirect initiated, redirecting to Google...');
+      console.log('After Google auth, should redirect back to:', redirectUrl);
     } catch (error) {
       console.error('OAuth sign-in failed:', error);
       throw error;
