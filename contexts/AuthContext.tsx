@@ -65,7 +65,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         }
       } else if (event === 'SIGNED_OUT') {
-        console.log('User signed out');
+        console.log('User signed out, redirecting to home');
+        // Redirect to home page after sign out
+        setTimeout(() => {
+          window.location.hash = '#/';
+        }, 100);
       } else if (event === 'TOKEN_REFRESHED') {
         console.log('Token refreshed');
       }

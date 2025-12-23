@@ -59,9 +59,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const handleSignOut = async () => {
     try {
+      console.log('Sign out button clicked');
       await signOut();
+      console.log('Sign out successful');
+      // Redirect will be handled by AuthContext SIGNED_OUT event
     } catch (error) {
       console.error('Failed to sign out:', error);
+      // Even if there's an error, try to redirect
+      window.location.hash = '#/';
     }
   };
 
