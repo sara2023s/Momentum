@@ -135,6 +135,70 @@ export async function createDailyRetro(userId: string, data: {
   }
 }
 
+export async function updateDailyRetro(retroId: string, data: {
+  rating?: number;
+  goodThing1?: string;
+  goodThing2?: string;
+  goodThing3?: string;
+  notes?: string;
+}) {
+  try {
+    const updateData: {
+      rating?: number;
+      goodThing1?: string | null;
+      goodThing2?: string | null;
+      goodThing3?: string | null;
+      notes?: string | null;
+    } = {};
+
+    if (data.rating !== undefined) {
+      updateData.rating = data.rating;
+    }
+    if (data.goodThing1 !== undefined) {
+      updateData.goodThing1 = data.goodThing1 || null;
+    }
+    if (data.goodThing2 !== undefined) {
+      updateData.goodThing2 = data.goodThing2 || null;
+    }
+    if (data.goodThing3 !== undefined) {
+      updateData.goodThing3 = data.goodThing3 || null;
+    }
+    if (data.notes !== undefined) {
+      updateData.notes = data.notes || null;
+    }
+
+    const { data: retro, error } = await supabase
+      .from('DailyRetro')
+      .update(updateData)
+      .eq('id', retroId)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    if (!retro) {
+      throw new Error('Retro not found');
+    }
+
+    return {
+      id: retro.id,
+      date: new Date(retro.date).toLocaleDateString(),
+      rating: retro.rating,
+      gratitude: [
+        retro.goodThing1,
+        retro.goodThing2,
+        retro.goodThing3,
+      ].filter(Boolean) as string[],
+      notes: retro.notes || '',
+    };
+  } catch (error) {
+    console.error('Error updating daily retro:', error);
+    throw new Error('Failed to update daily retro');
+  }
+}
+
 export async function getTodayRetro(userId: string) {
   try {
     const today = new Date();

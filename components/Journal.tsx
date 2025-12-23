@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useTransition } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Star } from 'lucide-react';
-import { getDailyRetros, createDailyRetro } from '../actions/dailyRetro';
+import { Save, Star, Edit2, X, Check as CheckIcon } from 'lucide-react';
+import { getDailyRetros, createDailyRetro, updateDailyRetro } from '../actions/dailyRetro';
 import { addXP } from '../actions/user';
 import { useAuth } from '../contexts/AuthContext';
 import { useApp } from '../App';
@@ -19,6 +19,12 @@ export const Journal: React.FC = () => {
   const [submittedToday, setSubmittedToday] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editRating, setEditRating] = useState(5);
+  const [editGratitude1, setEditGratitude1] = useState('');
+  const [editGratitude2, setEditGratitude2] = useState('');
+  const [editGratitude3, setEditGratitude3] = useState('');
+  const [editNotes, setEditNotes] = useState('');
 
   useEffect(() => {
     if (!authUser) return;
@@ -82,6 +88,63 @@ export const Journal: React.FC = () => {
       } catch (error) {
         console.error('Failed to create journal entry:', error);
         alert('Failed to save journal entry. Please try again.');
+      }
+    });
+  };
+
+  const handleStartEdit = (entry: JournalEntry) => {
+    setEditingId(entry.id);
+    setEditRating(entry.rating);
+    setEditGratitude1(entry.gratitude[0] || '');
+    setEditGratitude2(entry.gratitude[1] || '');
+    setEditGratitude3(entry.gratitude[2] || '');
+    setEditNotes(entry.notes || '');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditRating(5);
+    setEditGratitude1('');
+    setEditGratitude2('');
+    setEditGratitude3('');
+    setEditNotes('');
+  };
+
+  const handleSaveEdit = async (entryId: string) => {
+    const entryData = {
+      rating: editRating,
+      goodThing1: editGratitude1.trim() || undefined,
+      goodThing2: editGratitude2.trim() || undefined,
+      goodThing3: editGratitude3.trim() || undefined,
+      notes: editNotes.trim() || undefined,
+    };
+
+    const originalEntry = journalEntries.find(e => e.id === entryId);
+    if (!originalEntry) return;
+
+    // Optimistic update
+    const updatedEntry = {
+      ...originalEntry,
+      rating: entryData.rating,
+      gratitude: [
+        entryData.goodThing1,
+        entryData.goodThing2,
+        entryData.goodThing3,
+      ].filter(Boolean) as string[],
+      notes: entryData.notes || '',
+    };
+    setJournalEntries((prev) => prev.map(e => e.id === entryId ? updatedEntry : e));
+
+    startTransition(async () => {
+      try {
+        const saved = await updateDailyRetro(entryId, entryData);
+        setJournalEntries((prev) => prev.map(e => e.id === entryId ? saved : e));
+        setEditingId(null);
+      } catch (error) {
+        console.error('Failed to update journal entry:', error);
+        // Revert on error
+        setJournalEntries((prev) => prev.map(e => e.id === entryId ? originalEntry : e));
+        alert('Failed to update journal entry. Please try again.');
       }
     });
   };
@@ -190,25 +253,110 @@ export const Journal: React.FC = () => {
                 key={entry.id}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-surface border border-surface/50 rounded-xl p-5 space-y-3"
+                className="bg-surface border border-surface/50 rounded-xl p-5 space-y-3 group"
               >
-                <div className="flex justify-between items-start">
-                  <span className="text-primary font-medium font-mono text-sm">{entry.date}</span>
-                  <span className="flex items-center gap-1 text-primary text-sm font-bold">
-                    {entry.rating}/10 <Star size={12} fill="currentColor" />
-                  </span>
-                </div>
-                
-                {entry.gratitude.length > 0 && (
-                  <ul className="text-sm text-text/70 list-disc list-inside space-y-1 bg-obsidian/50 p-3 rounded-lg">
-                    {entry.gratitude.map((g, i) => <li key={i}>{g}</li>)}
-                  </ul>
-                )}
-                
-                {entry.notes && (
-                  <p className="text-sm text-text leading-relaxed border-l-2 border-surface/50 pl-3">
-                    {entry.notes}
-                  </p>
+                {editingId === entry.id ? (
+                  <>
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-primary font-medium font-mono text-sm">{entry.date}</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleSaveEdit(entry.id)}
+                          className="p-1.5 rounded-lg hover:bg-primary/20 text-primary transition-colors"
+                          title="Save"
+                          aria-label="Save"
+                        >
+                          <CheckIcon size={16} />
+                        </button>
+                        <button
+                          onClick={handleCancelEdit}
+                          className="p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-text transition-colors"
+                          title="Cancel"
+                          aria-label="Cancel"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-text">Rating ({editRating}/10)</label>
+                      <input 
+                        type="range" 
+                        min="1" 
+                        max="10" 
+                        value={editRating} 
+                        onChange={(e) => setEditRating(Number(e.target.value))}
+                        className="w-full h-2 bg-surface/70 rounded-lg appearance-none cursor-pointer accent-primary"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-text">Gratitude</label>
+                      <input 
+                        type="text" 
+                        placeholder="1." 
+                        value={editGratitude1} 
+                        onChange={e => setEditGratitude1(e.target.value)} 
+                        className="w-full bg-obsidian border border-surface/50 rounded-lg p-2 text-sm text-text focus:border-primary outline-none" 
+                      />
+                      <input 
+                        type="text" 
+                        placeholder="2." 
+                        value={editGratitude2} 
+                        onChange={e => setEditGratitude2(e.target.value)} 
+                        className="w-full bg-obsidian border border-surface/50 rounded-lg p-2 text-sm text-text focus:border-primary outline-none" 
+                      />
+                      <input 
+                        type="text" 
+                        placeholder="3." 
+                        value={editGratitude3} 
+                        onChange={e => setEditGratitude3(e.target.value)} 
+                        className="w-full bg-obsidian border border-surface/50 rounded-lg p-2 text-sm text-text focus:border-primary outline-none" 
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-text">Notes</label>
+                      <textarea 
+                        value={editNotes}
+                        onChange={e => setEditNotes(e.target.value)}
+                        placeholder="What did I learn? What can I improve tomorrow?"
+                        className="w-full h-24 bg-obsidian border border-surface/50 rounded-lg p-2 text-sm text-text focus:border-primary outline-none resize-none"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-between items-start">
+                      <span className="text-primary font-medium font-mono text-sm">{entry.date}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="flex items-center gap-1 text-primary text-sm font-bold">
+                          {entry.rating}/10 <Star size={12} fill="currentColor" />
+                        </span>
+                        <button
+                          onClick={() => handleStartEdit(entry)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-primary"
+                          title="Edit entry"
+                          aria-label="Edit entry"
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {entry.gratitude.length > 0 && (
+                      <ul className="text-sm text-text/70 list-disc list-inside space-y-1 bg-obsidian/50 p-3 rounded-lg">
+                        {entry.gratitude.map((g, i) => <li key={i}>{g}</li>)}
+                      </ul>
+                    )}
+                    
+                    {entry.notes && (
+                      <p className="text-sm text-text leading-relaxed border-l-2 border-surface/50 pl-3">
+                        {entry.notes}
+                      </p>
+                    )}
+                  </>
                 )}
               </motion.div>
             ))
