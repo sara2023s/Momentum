@@ -253,26 +253,81 @@ export const Habits: React.FC = () => {
               }`}
             >
             <div className="flex justify-between items-start mb-4">
-               <h3 className={`font-medium text-lg flex-1 ${habit.completedToday ? 'text-text/70' : 'text-text'}`}>
-                 {habit.title}
-               </h3>
-               <div className="flex items-center gap-2">
-                 <div className={`flex items-center gap-1 text-sm font-mono ${habit.streak > 0 ? 'text-primary' : 'text-text/70'}`}>
-                   <Flame size={14} className={habit.streak > 0 ? 'fill-orange-500' : ''} />
-                   {habit.streak}
-                 </div>
-                 <button
-                   onClick={(e) => {
-                     e.stopPropagation();
-                     handleDelete(habit.id);
-                   }}
-                   className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-red-400"
-                   title="Delete habit"
-                   aria-label="Delete habit"
-                 >
-                   <Trash2 size={16} />
-                 </button>
-               </div>
+              {editingId === habit.id ? (
+                <div className="flex-1 flex items-center gap-2">
+                  <input
+                    ref={editInputRef}
+                    type="text"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSaveEdit(habit.id);
+                      } else if (e.key === 'Escape') {
+                        handleCancelEdit();
+                      }
+                    }}
+                    className="flex-1 bg-surface border border-primary/30 rounded-lg px-3 py-1.5 text-text focus:outline-none focus:ring-2 focus:ring-primary/50 text-lg font-medium"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSaveEdit(habit.id);
+                    }}
+                    className="p-1.5 rounded-lg hover:bg-primary/20 text-primary transition-colors"
+                    title="Save"
+                    aria-label="Save"
+                  >
+                    <CheckIcon size={16} />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCancelEdit();
+                    }}
+                    className="p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-text transition-colors"
+                    title="Cancel"
+                    aria-label="Cancel"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <h3 className={`font-medium text-lg flex-1 ${habit.completedToday ? 'text-text/70' : 'text-text'}`}>
+                    {habit.title}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <div className={`flex items-center gap-1 text-sm font-mono ${habit.streak > 0 ? 'text-primary' : 'text-text/70'}`}>
+                      <Flame size={14} className={habit.streak > 0 ? 'fill-orange-500' : ''} />
+                      {habit.streak}
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleStartEdit(habit.id, habit.title);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-primary"
+                      title="Edit habit"
+                      aria-label="Edit habit"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(habit.id);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-red-400"
+                      title="Delete habit"
+                      aria-label="Delete habit"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
 
             <button
