@@ -63,7 +63,7 @@ export const Navbar: React.FC = () => {
               to="/how-this-came-to-be" 
               className="text-text-muted hover:text-text-main transition-colors text-sm font-medium whitespace-nowrap py-2 px-1"
             >
-              How This Came to Be
+              The Story
             </Link>
             <Link 
               to="/about" 

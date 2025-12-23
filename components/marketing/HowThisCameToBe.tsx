@@ -18,10 +18,10 @@ export const HowThisCameToBe: React.FC = () => {
             className="text-center mb-16"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              How This <span className="text-mint-primary">Came to Be</span>
+              The <span className="text-mint-primary">Story</span>
             </h1>
             <p className="text-lg text-text-muted max-w-2xl mx-auto">
-              The story behind Momentum—from frustration to solution.
+              From frustration to solution—how Momentum was born.
             </p>
           </motion.div>
 
