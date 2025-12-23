@@ -199,6 +199,24 @@ export async function updateDailyRetro(retroId: string, data: {
   }
 }
 
+export async function deleteDailyRetro(retroId: string) {
+  try {
+    const { error } = await supabase
+      .from('DailyRetro')
+      .delete()
+      .eq('id', retroId);
+
+    if (error) {
+      throw error;
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting daily retro:', error);
+    throw new Error('Failed to delete daily retro');
+  }
+}
+
 export async function getTodayRetro(userId: string) {
   try {
     const today = new Date();

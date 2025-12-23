@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useTransition } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Star, Edit2, X, Check as CheckIcon } from 'lucide-react';
-import { getDailyRetros, createDailyRetro, updateDailyRetro } from '../actions/dailyRetro';
+import { Save, Star, Edit2, X, Check as CheckIcon, Trash2 } from 'lucide-react';
+import { getDailyRetros, createDailyRetro, updateDailyRetro, deleteDailyRetro } from '../actions/dailyRetro';
 import { addXP } from '../actions/user';
 import { useAuth } from '../contexts/AuthContext';
 import { useApp } from '../App';
@@ -145,6 +145,39 @@ export const Journal: React.FC = () => {
         // Revert on error
         setJournalEntries((prev) => prev.map(e => e.id === entryId ? originalEntry : e));
         alert('Failed to update journal entry. Please try again.');
+      }
+    });
+  };
+
+  const handleDelete = async (entryId: string) => {
+    if (!window.confirm('Are you sure you want to delete this journal entry? This action cannot be undone.')) {
+      return;
+    }
+
+    const entry = journalEntries.find(e => e.id === entryId);
+    if (!entry) return;
+
+    // Optimistic update - remove from UI immediately
+    setJournalEntries((prev) => prev.filter(e => e.id !== entryId));
+
+    // Check if this was today's entry
+    const today = new Date().toLocaleDateString();
+    if (entry.date === today) {
+      setSubmittedToday(false);
+    }
+
+    startTransition(async () => {
+      try {
+        await deleteDailyRetro(entryId);
+      } catch (error) {
+        console.error('Failed to delete journal entry:', error);
+        // Revert on error - add the entry back
+        setJournalEntries((prev) => [...prev, entry].sort((a, b) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return dateB.getTime() - dateA.getTime();
+        }));
+        alert('Failed to delete journal entry. Please try again.');
       }
     });
   };
