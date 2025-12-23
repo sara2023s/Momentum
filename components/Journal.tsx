@@ -375,6 +375,14 @@ export const Journal: React.FC = () => {
                         >
                           <Edit2 size={16} />
                         </button>
+                        <button
+                          onClick={() => handleDelete(entry.id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-surface/70 text-text/50 hover:text-red-400"
+                          title="Delete entry"
+                          aria-label="Delete entry"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </div>
                     </div>
                     
