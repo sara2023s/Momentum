@@ -76,8 +76,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
-      // For HashRouter, we need to use the full URL with hash
-      const redirectUrl = `${window.location.origin}${window.location.pathname}#/app`;
+      // Get the production URL from environment variable, or use current origin
+      // In Vercel, VITE_APP_URL should be set to the production domain
+      const getRedirectUrl = () => {
+        // Check for Vite env var first (client-side)
+        if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_APP_URL) {
+          return `${import.meta.env.VITE_APP_URL}#/app`;
+        }
+        // Check for process.env (Node.js/SSR)
+        if (typeof process !== 'undefined' && process.env?.VITE_APP_URL) {
+          return `${process.env.VITE_APP_URL}#/app`;
+        }
+        // Fallback to current origin (works in dev and if env var not set)
+        return `${window.location.origin}${window.location.pathname}#/app`;
+      };
+      
+      const redirectUrl = getRedirectUrl();
       console.log('Initiating OAuth with redirect URL:', redirectUrl);
       
       const { data, error } = await supabase.auth.signInWithOAuth({

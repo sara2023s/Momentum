@@ -19,7 +19,7 @@ const Card = ({ children, className = "", delay = 0 }: { children?: React.ReactN
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4, delay }}
-    className={`bg-surface border border-surface/50 rounded-2xl p-6 relative overflow-hidden group ${className}`}
+    className={`bg-midnight-surface border border-midnight-border rounded-2xl p-6 relative overflow-hidden group ${className}`}
   >
     {children}
   </motion.div>
@@ -127,7 +127,7 @@ export const Dashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-text/60">Loading dashboard...</div>
+        <div className="text-text-muted">Loading dashboard...</div>
       </div>
     );
   }
@@ -135,34 +135,34 @@ export const Dashboard: React.FC = () => {
   return (
     <>
       <div className="space-y-1 sm:space-y-2">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-text tracking-tight">Good Evening, {user.name}</h1>
-        <p className="text-xs sm:text-sm md:text-base text-text/70">Here is your daily briefing.</p>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-text-main tracking-tight">Good Evening, {user.name}</h1>
+        <p className="text-xs sm:text-sm md:text-base text-text-muted">Here is your daily briefing.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
         {/* Quote Widget */}
-        <Card className="md:col-span-2 flex flex-col justify-center bg-gradient-to-br from-surface to-surface/50">
-          <div className="absolute top-0 right-0 p-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-          <h3 className="text-base sm:text-xl md:text-2xl font-serif italic text-text leading-relaxed z-10">"{quote}"</h3>
+        <Card className="md:col-span-2 flex flex-col justify-center bg-gradient-to-br from-midnight-surface to-midnight-surface/50">
+          <div className="absolute top-0 right-0 p-32 bg-mint-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <h3 className="text-base sm:text-xl md:text-2xl font-serif italic text-text-main leading-relaxed z-10">"{quote}"</h3>
         </Card>
 
         {/* Level Widget */}
         <Card className="md:col-span-1 flex flex-col justify-between items-center text-center relative" delay={0.1}>
-           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
-           <div className="p-3 bg-surface rounded-full mb-4 ring-1 ring-surface/50">
-             <Trophy size={24} className="text-yellow-500" />
+           <div className="absolute inset-0 bg-gradient-to-b from-mint-primary/5 to-transparent pointer-events-none" />
+           <div className="p-3 bg-midnight-surface rounded-full mb-4 ring-1 ring-midnight-border">
+             <Trophy size={24} className="text-mint-primary" />
            </div>
            <div>
-             <div className="text-3xl sm:text-4xl font-bold text-text mb-1">{user.level}</div>
-             <div className="text-xs text-text/60 uppercase tracking-widest font-semibold">Current Level</div>
+             <div className="text-3xl sm:text-4xl font-bold text-text-main mb-1">{user.level}</div>
+             <div className="text-xs text-text-muted uppercase tracking-widest font-semibold">Current Level</div>
            </div>
            <div className="w-full mt-6">
-             <div className="flex justify-between text-xs text-text/60 mb-1">
+             <div className="flex justify-between text-xs text-text-muted mb-1">
                <span>Next Lvl</span>
                <span>{user.xp} XP</span>
              </div>
-             <div className="h-2 bg-surface rounded-full overflow-hidden">
-               <div className="h-full bg-primary rounded-full" style={{ width: `${(user.xp / (user.level * 100)) * 100}%` }}></div>
+             <div className="h-2 bg-midnight-surface rounded-full overflow-hidden">
+               <div className="h-full bg-mint-primary rounded-full" style={{ width: `${(user.xp / (user.level * 100)) * 100}%` }}></div>
              </div>
            </div>
         </Card>
@@ -170,10 +170,10 @@ export const Dashboard: React.FC = () => {
         {/* Habits Summary */}
         <Card className="md:col-span-1 min-h-[200px]" delay={0.2}>
           <div className="flex justify-between items-start mb-4">
-            <h4 className="font-semibold text-text flex items-center gap-2">
-              <Flame size={18} className="text-accent" /> Habits
+            <h4 className="font-semibold text-text-main flex items-center gap-2">
+              <Flame size={18} className="text-mint-primary" /> Habits
             </h4>
-            <Link to="/habits" className="text-xs text-primary hover:text-blue-400 transition-colors">View All</Link>
+            <Link to="/habits" className="text-xs text-mint-primary hover:text-teal-500 transition-colors">View All</Link>
           </div>
           <div className="flex items-center gap-6">
             <div className="h-24 w-24 relative">
@@ -189,18 +189,18 @@ export const Dashboard: React.FC = () => {
                     endAngle={-270}
                     stroke="none"
                   >
-                    <Cell fill="#3B82F6" />
-                    <Cell fill="#172554" />
+                    <Cell fill="#2DD4BF" />
+                    <Cell fill="#1E293B" />
                   </Pie>
                 </PieChart>
                </ResponsiveContainer>
-               <div className="absolute inset-0 flex items-center justify-center font-bold text-sm">
+               <div className="absolute inset-0 flex items-center justify-center font-bold text-sm text-text-main">
                  {Math.round(habitPercentage)}%
                </div>
             </div>
             <div className="flex-1 space-y-2">
-              <div className="text-2xl font-bold text-text">{completedHabits}/{totalHabits}</div>
-              <div className="text-xs text-text/60">Daily rituals completed. Keep the streak alive.</div>
+              <div className="text-2xl font-bold text-text-main">{completedHabits}/{totalHabits}</div>
+              <div className="text-xs text-text-muted">Daily rituals completed. Keep the streak alive.</div>
             </div>
           </div>
         </Card>
@@ -208,41 +208,41 @@ export const Dashboard: React.FC = () => {
         {/* Tasks Summary */}
         <Card className="md:col-span-1" delay={0.3}>
           <div className="flex justify-between items-start mb-4">
-            <h4 className="font-semibold text-text flex items-center gap-2">
-              <CheckCircle2 size={18} className="text-emerald-500" /> My Day
+            <h4 className="font-semibold text-text-main flex items-center gap-2">
+              <CheckCircle2 size={18} className="text-mint-primary" /> My Day
             </h4>
-            <Link to="/tasks" className="text-xs text-primary hover:text-blue-400 transition-colors">Manage</Link>
+            <Link to="/tasks" className="text-xs text-mint-primary hover:text-teal-500 transition-colors">Manage</Link>
           </div>
           <div className="space-y-3">
              {myDayTasks.slice(0, 3).map(task => (
                <div key={task.id} className="flex items-center gap-3 text-sm">
-                 <div className={`w-4 h-4 rounded border flex items-center justify-center ${task.completed ? 'bg-emerald-500/20 border-emerald-500' : 'border-zinc-700'}`}>
-                    {task.completed && <div className="w-2 h-2 bg-emerald-500 rounded-sm" />}
+                 <div className={`w-4 h-4 rounded border flex items-center justify-center ${task.completed ? 'bg-mint-primary/20 border-mint-primary' : 'border-midnight-border'}`}>
+                    {task.completed && <div className="w-2 h-2 bg-mint-primary rounded-sm" />}
                  </div>
-                 <span className={`truncate ${task.completed ? 'text-text/60 line-through' : 'text-text'}`}>{task.title}</span>
+                 <span className={`truncate ${task.completed ? 'text-text-muted line-through' : 'text-text-main'}`}>{task.title}</span>
                </div>
              ))}
-             {myDayTasks.length === 0 && <div className="text-text/60 text-sm italic">No tasks for today yet.</div>}
+             {myDayTasks.length === 0 && <div className="text-text-muted text-sm italic">No tasks for today yet.</div>}
           </div>
-          <div className="mt-4 pt-4 border-t border-surface/50 flex justify-between items-center">
-             <span className="text-xs text-text/60">{completedTasks} completed</span>
-             <div className="h-1 flex-1 mx-4 bg-surface rounded-full">
-               <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${myDayTasks.length > 0 ? (completedTasks/myDayTasks.length)*100 : 0}%` }} />
+          <div className="mt-4 pt-4 border-t border-midnight-border flex justify-between items-center">
+             <span className="text-xs text-text-muted">{completedTasks} completed</span>
+             <div className="h-1 flex-1 mx-4 bg-midnight-surface rounded-full">
+               <div className="h-full bg-mint-primary rounded-full" style={{ width: `${myDayTasks.length > 0 ? (completedTasks/myDayTasks.length)*100 : 0}%` }} />
              </div>
           </div>
         </Card>
 
         {/* Focus Summary */}
         <Card className="md:col-span-1 flex flex-col justify-center items-center text-center space-y-4" delay={0.4}>
-          <div className="p-4 bg-surface rounded-full ring-1 ring-surface/50 relative group-hover:ring-primary/50 transition-all">
-            <Clock size={32} className="text-primary" />
-            <div className="absolute inset-0 bg-primary/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="p-4 bg-midnight-surface rounded-full ring-1 ring-midnight-border relative group-hover:ring-mint-primary/50 transition-all">
+            <Clock size={32} className="text-mint-primary" />
+            <div className="absolute inset-0 bg-mint-primary/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
           <div>
-            <div className="text-3xl font-bold text-text">{focusMinutes} <span className="text-base font-normal text-text/60">min</span></div>
-            <div className="text-sm text-text/70">Total Focus Time Today</div>
+            <div className="text-3xl font-bold text-text-main">{focusMinutes} <span className="text-base font-normal text-text-muted">min</span></div>
+            <div className="text-sm text-text-muted">Total Focus Time Today</div>
           </div>
-          <Link to="/focus" className="inline-flex items-center gap-2 text-sm text-primary hover:text-blue-400 transition-colors">
+          <Link to="/focus" className="inline-flex items-center gap-2 text-sm text-mint-primary hover:text-teal-500 transition-colors">
             Start Session <ArrowRight size={14} />
           </Link>
         </Card>
@@ -262,7 +262,7 @@ export const Dashboard: React.FC = () => {
         <ContributionHeatmap 
           data={overallMomentumData} 
           title="Overall Momentum" 
-          color="#3B82F6"
+          color="#2DD4BF"
         />
       )}
     </>
